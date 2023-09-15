@@ -124,7 +124,7 @@ class AreaDeDesenho(Canvas):
     def desenhaCincunferencia(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
-            circ = CirculoGr(self.ponto_mouse_anterior, raio, self.espessura)
+            circ = CirculoGr(self.ponto_mouse_anterior, raio, self.cor, self.espessura)
             circ.desenhaCircunferencia(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
@@ -135,7 +135,7 @@ class AreaDeDesenho(Canvas):
     def desenhaMandala(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
-            mand = Mandala(self.ponto_mouse_anterior, raio, '#000000', '#000000', self.espessura)
+            mand = Mandala(self.ponto_mouse_anterior, raio, '#417E4D', '#DD3B35', self.espessura)
             mand.desenhaMandala(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
