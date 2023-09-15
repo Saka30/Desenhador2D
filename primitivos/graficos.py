@@ -1,3 +1,5 @@
+import math
+
 from primitivos import *
 
 
@@ -96,63 +98,123 @@ class Mandala:
         self.width = width
 
     def desenhaMandala(self, canvas):
-        # ------------------- circulos ------------------------------
+        # CIRCULOS
+
+        # central
         c1 = CirculoGr(self.centro, self.raio, self.width)
         c1.desenhaCircunferencia(canvas)
-        # esquerda
+
+        altura_triang = (math.sqrt(3) * c1.raio) / 2
+
+        # direito
         CirculoGr(PontoGr(c1.centro.x + c1.raio, c1.centro.y),
                   self.raio, self.width).desenhaCircunferencia(canvas)
-        # direita
+        # esquerdo
         CirculoGr(PontoGr(c1.centro.x - c1.raio, c1.centro.y),
-                  self.raio, self.width).desenhaCircunferencia(canvas)
-        # diagonal inferior esquerda
-        CirculoGr(PontoGr(c1.centro.x + c1.raio * math.cos(math.radians(60)),
-                          c1.centro.y + c1.raio * math.sin(math.radians(60))),
-                  self.raio, self.width).desenhaCircunferencia(canvas)
-        # diagonal superior esquerda
-        CirculoGr(PontoGr(c1.centro.x + c1.raio * math.cos(math.radians(60)),
-                          c1.centro.y - c1.raio * math.sin(math.radians(60))),
-                  self.raio, self.width).desenhaCircunferencia(canvas)
-        # diagonal inferior direita
-        CirculoGr(PontoGr(c1.centro.x - c1.raio * math.cos(math.radians(60)),
-                          c1.centro.y + c1.raio * math.sin(math.radians(60))),
                   self.raio, self.width).desenhaCircunferencia(canvas)
 
         # diagonal superior direita
-        CirculoGr(PontoGr(c1.centro.x - c1.raio * math.cos(math.radians(60)),
-                          c1.centro.y - c1.raio * math.sin(math.radians(60))),
+        CirculoGr(PontoGr(c1.centro.x + c1.raio/2, c1.centro.y - altura_triang),
                   self.raio, self.width).desenhaCircunferencia(canvas)
 
-        # ----------------------------retangulo----------------------------------------
-        r1 = RetanguloGr(PontoGr(c1.centro.x + 3 * (c1.raio / 2),
-                                 c1.centro.y - c1.raio * math.sin(math.radians(45)),
-                                 self.cor1, self.width),
-                         PontoGr(c1.centro.x - 3 * (c1.raio / 2),
-                                 c1.centro.y + c1.raio * math.sin(math.radians(45)),
-                                 self.cor1, self.width), self.width)
-        r1.desenhaRetangulo(canvas)
+        # diagonal superior esquerda
+        CirculoGr(PontoGr(c1.centro.x - c1.raio / 2, c1.centro.y - altura_triang),
+                  self.raio, self.width).desenhaCircunferencia(canvas)
 
-        # ------------------------- triangulos ----------------------------------------
-        # triangulo grande superior
-        TrianguloGr([PontoGr(c1.centro.x, c1.centro.y - 9*(c1.raio/5),
-                             self.cor1, self.width),
-                     PontoGr(r1.p1.x, r1.p2.y, self.cor1, self.width),
-                     r1.p2]).desenhaTriangulo(canvas)
+        # diagonal inferior direita
+        CirculoGr(PontoGr(c1.centro.x + c1.raio / 2, c1.centro.y + altura_triang),
+                  self.raio, self.width).desenhaCircunferencia(canvas)
 
-        # triangulo grande inferior
-        TrianguloGr([PontoGr(c1.centro.x, c1.centro.y + 9*(c1.raio/5),
-                             self.cor1, self.width),
-                     PontoGr(r1.p2.x, r1.p1.y, self.cor1, self.width),
-                     r1.p1]).desenhaTriangulo(canvas)
+        #diagonal inferior esquerda
+        CirculoGr(PontoGr(c1.centro.x - c1.raio / 2, c1.centro.y + altura_triang),
+                  self.raio, self.width).desenhaCircunferencia(canvas)
 
-        # triangulo pequeno superior
-        TrianguloGr([PontoGr(r1.p2.x, r1.p1.y, self.cor1, self.width),
-                     PontoGr(c1.centro.x, c1.centro.y - 9 * (c1.raio/5),
-                             self.cor1, self.width),
-                     r1.p1]).desenhaTriangulo(canvas)
+        # RETÂNGULO
 
-        # triangulo pequeno inferior
-        TrianguloGr([PontoGr(r1.p1.x, r1.p2.y, self.cor1, self.width),
-                     PontoGr(c1.centro.x, c1.centro.y + 9 * (c1.raio/5),
+        RetanguloGr(PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y + altura_triang,
+                            self.cor1, self.width),
+                    PontoGr(c1.centro.x + 3*(c1.raio/2), c1.centro.y - altura_triang,
+                            self.cor1, self.width),
+                    self.width).desenhaRetangulo(canvas)
+
+        # RETAS
+
+        # diagonal crescente do retângulo
+        RetaGr(PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y + altura_triang,
+                            self.cor1, self.width),
+               PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y - altura_triang,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        # diagonal decrescente do retângulo
+        RetaGr(PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y - altura_triang,
+                       self.cor1, self.width),
+               PontoGr(c1.centro.x + 3*(c1.raio/2), c1.centro.y + altura_triang,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        # reta vertical central
+        RetaGr(PontoGr(c1.centro.x, c1.centro.y - 2 * altura_triang,
                              self.cor1, self.width),
-                     r1.p2]).desenhaTriangulo(canvas)
+               PontoGr(c1.centro.x, c1.centro.y + 2 * altura_triang,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        # reta horizontal central
+        RetaGr(PontoGr(c1.centro.x - c1.raio, c1.centro.y,
+                       self.cor1, self.width),
+               PontoGr(c1.centro.x + c1.raio, c1.centro.y,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        #diagonal decrescente do hexagono central
+        RetaGr(PontoGr(c1.centro.x - c1.raio/2, c1.centro.y - altura_triang,
+                       self.cor1, self.width),
+               PontoGr(c1.centro.x + c1.raio/2, c1.centro.y + altura_triang,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        # diagonal crescente do hexagono central
+        RetaGr(PontoGr(c1.centro.x + c1.raio / 2, c1.centro.y - altura_triang,
+                       self.cor1, self.width),
+               PontoGr(c1.centro.x - c1.raio / 2, c1.centro.y + altura_triang,
+                       self.cor1, self.width)
+               ).desenhaReta(canvas)
+
+        # TRIÂNGULOS
+
+        # triângulo central crescente
+        TrianguloGr([PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y + altura_triang,
+                            self.cor1, self.width),
+                     PontoGr(c1.centro.x, c1.centro.y - 2*altura_triang,
+                             self.cor1, self.width),
+                     PontoGr(c1.centro.x + 3*(c1.raio/2), c1.centro.y + altura_triang,
+                       self.cor1, self.width)]
+                    ).desenhaTriangulo(canvas)
+
+        # triângulo central decrescente
+        TrianguloGr([PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y - altura_triang,
+                       self.cor1, self.width),
+                     PontoGr(c1.centro.x, c1.centro.y + 2 * altura_triang,
+                             self.cor1, self.width),
+                     PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y - altura_triang,
+                             self.cor1, self.width)
+                     ]).desenhaTriangulo(canvas)
+
+        # triângulo superior
+        TrianguloGr([PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y - altura_triang,
+                       self.cor1, self.width),
+                     PontoGr(c1.centro.x, c1.centro.y - 2 * altura_triang,
+                             self.cor1, self.width),
+                     PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y - altura_triang,
+                             self.cor1, self.width)
+                     ]).desenhaTriangulo(canvas)
+
+        # triângulo inferior
+        TrianguloGr([PontoGr(c1.centro.x - 3*(c1.raio/2), c1.centro.y + altura_triang,
+                            self.cor1, self.width),
+                     PontoGr(c1.centro.x, c1.centro.y + 2 * altura_triang,
+                             self.cor1, self.width),
+                     PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y + altura_triang,
+                             self.cor1, self.width)
+                     ]).desenhaTriangulo(canvas)
