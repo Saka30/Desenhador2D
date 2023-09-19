@@ -18,6 +18,8 @@ class AreaDeDesenho(Canvas):
         # dados
         self.pontosTriangulo = []
         self.cor = '#000000'
+        self.mandala_cor1 = '#417E4D'
+        self.mandala_cor2 = '#DD3B35'
         self.espessura = espessura
         self.tipo_primitivo = tipo_primitivo
         self.coordenadas_var = ctk.StringVar(value='')
@@ -135,7 +137,8 @@ class AreaDeDesenho(Canvas):
     def desenhaMandala(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
-            mand = Mandala(self.ponto_mouse_anterior, raio, '#417E4D', '#DD3B35', self.espessura)
+            # mand = Mandala(self.ponto_mouse_anterior, raio, '#417E4D', '#DD3B35', self.espessura)
+            mand = Mandala(self.ponto_mouse_anterior, raio, self.mandala_cor1, self.mandala_cor2, self.espessura)
             mand.desenhaMandala(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
@@ -143,8 +146,9 @@ class AreaDeDesenho(Canvas):
         else:
             self.ponto_mouse_anterior = ponto
 
-    def pegaCor(self):
-        _, self.cor, = colorchooser.askcolor()
+    def pegaCor(self, nome_atributo):
+        setattr(self, nome_atributo,  colorchooser.askcolor()[1])
+
 
     def redesenhar(self):
         for i in range(len(self.lista_pontos)):
