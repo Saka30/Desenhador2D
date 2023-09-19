@@ -1,11 +1,3 @@
-'''
-data 05/09/2023
-Integrantes do Grupo - Turma B:
-   -Gabriel Carlos Silva -  RA00325868
-   -Gustavo Bertolini Carvalho de Castro - RA00325934
-   -Rafael Santos Sakatauskas  - RA00325920
-'''
-
 import customtkinter as ctk
 from canvas import AreaDeDesenho
 from toolset import DrawTools
@@ -37,9 +29,6 @@ class AppDesenho(ctk.CTk):
         self.drawtools = DrawTools(self, self.figura, self.canvas, self.espessura)
 
 
-        self.mainloop()
-
-
 if __name__ == '__main__':
-    AppDesenho(800, 600)
-
+    app = AppDesenho(800, 600)
+    app.mainloop()

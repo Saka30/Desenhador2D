@@ -8,24 +8,38 @@ class DrawTools(ctk.CTkFrame):
 
         self.tipo_primitivo = tipo_primitivo
         self.espessura = espessura
+        self.meu_canvas = meu_canvas
 
         # Componentes
-        BotaoTipoDePrimitivo(self, self.tipo_primitivo)
+        BotaoTipoDePrimitivo(self, self.modo_mandala, self.tipo_primitivo)
         ControleDeEspessura(self, self.espessura)
         EspessuraLabel(self, self.espessura)
-        BotaoCor(self, meu_canvas)
-        BotaoRedesenhar(self, meu_canvas)
-        BotaoLimpaTudo(self, meu_canvas)
+        self.bc1 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("cor"))
+        self.bc1.place(x=15, y=85)
+        self.bc2 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("mandala_cor2"), texto="Cor 2")
+        BotaoRedesenhar(self, self.meu_canvas)
+        BotaoLimpaTudo(self, self.meu_canvas)
+
+    def modo_mandala(self, option):
+        if option == "mandala":
+            self.bc2.place(x=15, y=135)
+            self.bc1.configure(text="Cor 1")
+            self.bc1.configure(command=lambda: self.meu_canvas.pegaCor("mandala_cor1"))
+        else:
+            self.bc2.place_forget()
+            self.bc1.configure(text="Escolher Cor")
+            self.bc1.configure(command=lambda: self.meu_canvas.pegaCor("cor"))
 
 
 class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
-    def __init__(self, container, tipo_primitvo):
+    def __init__(self, container, comando, tipo_primitvo):
         super().__init__(master=container,
                          values=['ponto', 'reta', 'triângulo', 'retângulo', 'circulo', 'mandala'],
                          width=115,
-                         variable=tipo_primitvo)
+                         variable=tipo_primitvo,
+                         command=comando)
 
-        self.place(x=2, y=40)
+        self.place(x=2, y=25)
         self.set('Figura')
 
 class BotaoLimpaTudo(ctk.CTkButton):
@@ -41,10 +55,8 @@ class BotaoRedesenhar(ctk.CTkButton):
         self.place(x=15, y=470)
 
 class BotaoCor(ctk.CTkButton):
-    def __init__(self, container, meu_canvas, texto='Escolher Cor', ):
-        super().__init__(container, text=texto, command=meu_canvas.pegaCor, width=80)
-
-        self.place(x=15, y=110)
+    def __init__(self, container,comando,texto='Escolher Cor', ):
+        super().__init__(container, text=texto, command=comando, width=80)
 
 
 class ControleDeEspessura(ctk.CTkSlider):
