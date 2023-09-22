@@ -43,34 +43,36 @@ class AreaDeDesenho(Canvas):
         self.coordenadas_var.set(value=f'{event.x}, {event.y}px')
 
     def desfaz(self, event):
-        print("desfeito")
+        if not self.lista_primitivos.is_empty():
+            self.lista_primitivos.pop()
+            self.deletaTudo()
+            self.redesenhar()
+
 
     def desenhaPrimitivo(self, event):
         ponto_do_mouse_atual = PontoGr(event.x, event.y, self.cor, self.espessura)
-
+        primitivo = None
         match self.tipo_primitivo.get():
             case 'ponto':
-                p = self.desenhaPonto(ponto_do_mouse_atual)
-                self.lista_primitivos.append(p)
+                primitivo = self.desenhaPonto(ponto_do_mouse_atual)
             case 'reta':
-                r = self.desenhaReta(self.ponto_mouse_anterior, ponto_do_mouse_atual)
-                self.lista_primitivos.append(r)
+                primitivo = self.desenhaReta(self.ponto_mouse_anterior, ponto_do_mouse_atual)
             case 'retângulo':
-                rtg = self.desenhaRetangulo(self.ponto_mouse_anterior, ponto_do_mouse_atual)
-                self.lista_primitivos.append(rtg)
+                primitivo = self.desenhaRetangulo(self.ponto_mouse_anterior, ponto_do_mouse_atual)
             case 'triângulo':
                 self.pontosTriangulo.append(ponto_do_mouse_atual)
                 if len(self.pontosTriangulo) == 3:
                     pontosTriangulo = self.pontosTriangulo.copy()
-                    trg = self.desenhaTriangulo(pontosTriangulo)
-                    self.lista_primitivos.append(trg)
+                    primitivo = self.desenhaTriangulo(pontosTriangulo)
                     self.pontosTriangulo.clear()
             case 'circulo':
-                circ = self.desenhaCincunferencia(ponto_do_mouse_atual)
-                self.lista_primitivos.append(circ)
+                primitivo = self.desenhaCincunferencia(ponto_do_mouse_atual)
             case 'mandala':
-                mand = self.desenhaMandala(ponto_do_mouse_atual)
-                self.lista_primitivos.append(mand)
+                primitivo = self.desenhaMandala(ponto_do_mouse_atual)
+
+        if primitivo is not None:
+            self.lista_primitivos.append(primitivo)
+
 
     def desenhaPonto(self, ponto):
         ponto.desenhaPonto(self)

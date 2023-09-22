@@ -14,12 +14,12 @@ class AppDesenho(ctk.CTk):
         self.resizable(False, False)
         self.pack_propagate(False)
 
-        #configura o diretorio do icone indepedente da IDE
+        # configura o diretorio do icone indepedente da IDE
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.icon_path = os.path.join(self.script_dir, "paint-pallete.ico")
         self.iconbitmap(self.icon_path)
 
-        #dados
+        # dados
         self.espessura = ctk.IntVar(value=1)
         self.espessuraLabel = ctk.StringVar()
         self.figura = ctk.StringVar(value='')
@@ -27,6 +27,8 @@ class AppDesenho(ctk.CTk):
         # Componentes
         self.canvas = AreaDeDesenho(self, self.espessura, self.figura)
         self.drawtools = DrawTools(self, self.figura, self.canvas, self.espessura)
+
+        self.bind("<Control-z>", self.canvas.desfaz)
 
 
 if __name__ == '__main__':
