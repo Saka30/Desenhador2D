@@ -27,6 +27,10 @@ class PontoGr(Ponto):
             (self.x + raio, self.y + raio),
             fill=self.cor, outline=self.cor)
 
+    def apagar(self, canvas):
+        self.cor = '#FFFFFF'
+        self.desenhaPonto(canvas)
+
 
 class RetaGr(Reta):
 
@@ -50,6 +54,10 @@ class RetaGr(Reta):
             ponto_inicial.y += incremento_y
             ponto_inicial.desenhaPonto(canvas)
 
+    def apagar(self, canvas):
+        self.p1.cor = '#FFFFFF'
+        self.desenhaReta(canvas)
+
 
 class RetanguloGr(Retangulo):
 
@@ -64,6 +72,10 @@ class RetanguloGr(Retangulo):
         RetaGr(self.p2, PontoGr(self.p2.x, self.p1.y, cor, self.width)).desenhaReta(canvas)
         RetaGr(PontoGr(self.p2.x, self.p1.y, cor, self.width),
                PontoGr(self.p1.x, self.p1.y, cor, self.width)).desenhaReta(canvas)
+    def apagar(self, canvas):
+        self.p1.cor = '#FFFFFF'
+        self.p2.cor = '#FFFFFF'
+        self.desenhaRetangulo(canvas)
 
 
 class TrianguloGr(Triangulo):
@@ -71,6 +83,11 @@ class TrianguloGr(Triangulo):
         RetaGr(self.pontos[0], self.pontos[1]).desenhaReta(canvas)
         RetaGr(self.pontos[1], self.pontos[2]).desenhaReta(canvas)
         RetaGr(self.pontos[2], self.pontos[0]).desenhaReta(canvas)
+
+    def apagar(self, canvas):
+        for p in self.pontos:
+            p.cor = '#FFFFFF'
+        self.desenhaTriangulo(canvas)
 
 
 class CirculoGr(Circulo):
@@ -86,6 +103,10 @@ class CirculoGr(Circulo):
             y = self.centro.y + self.raio * math.sin(math.radians(angulo))
             PontoGr(x, y, self.cor, self.width).desenhaPonto(canvas)
             angulo += 0.1
+
+    def apagar(self, canvas):
+        self.cor = '#FFFFFF'
+        self.desenhaCircunferencia(canvas)
 
 
 class Mandala:
@@ -217,3 +238,9 @@ class Mandala:
                      PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y + altura_triang,
                              self.corRetas, self.width)
                      ]).desenhaTriangulo(canvas)
+
+    def apagar(self, canvas):
+        self.corRetas = '#FFFFFF'
+        self.corCirc = '#FFFFFF'
+
+        self.desenhaMandala(canvas)

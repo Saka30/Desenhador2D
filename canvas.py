@@ -1,7 +1,6 @@
 import customtkinter as ctk
-from tkinter import Canvas
+from tkinter import Canvas, colorchooser, Menu
 from primitivos.graficos import *
-from tkinter import colorchooser
 from linked_list import LinkedList
 
 
@@ -27,6 +26,13 @@ class AreaDeDesenho(Canvas):
         #Armazenador de primitivos
         self.lista_primitivos = LinkedList()
 
+        #cria um menu de opçoes
+        self.subMenu = Menu(self, tearoff=0)
+        self.subMenu.add_command(label="Limpar tela", command=self.deletaTudo)
+        self.subMenu.add_command(label="Limpar memória", command=self.limpaMemoria)
+        self.subMenu.add_separator()
+        self.subMenu.add_command(label="Sair", command=container.quit)
+
         self.coordenadas = ctk.CTkLabel(self,
                                         text_color='black',
                                         textvariable=self.coordenadas_var,
@@ -37,10 +43,17 @@ class AreaDeDesenho(Canvas):
 
         # input
         self.bind("<Button-1>", self.desenhaPrimitivo)
+        self.bind("<Button-3>", self.callSubMenu)
         self.bind("<Motion>", self.changeCoordinates)
 
     def changeCoordinates(self, event):
         self.coordenadas_var.set(value=f'{event.x}, {event.y}px')
+
+    def callSubMenu(self, event):
+        self.subMenu.post(event.x_root, event.y_root)
+
+    def callMenuDeleta(self):
+        MenuDeleta()
 
     def desfaz(self, event):
         if not self.lista_primitivos.is_empty():
@@ -151,5 +164,8 @@ class AreaDeDesenho(Canvas):
                 case Mandala():
                     primitivo.desenhaMandala(self)
 
-    def deletaTudo(self):
+    def limpaMemoria(self):
+        self.lista_primitivos.clear()
+
+    def deletaTudo(self, event=None):
         self.delete('all')
