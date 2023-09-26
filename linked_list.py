@@ -126,6 +126,6 @@ class LinkedList:
     def __str__(self):
         return self.__repr__()
 
-    def limpa(self):
+    def clear(self):
         self.head = None
-
+        self._size = 0
