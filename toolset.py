@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import Listbox
 
 
 class DrawTools(ctk.CTkFrame):
@@ -6,9 +7,11 @@ class DrawTools(ctk.CTkFrame):
         super().__init__(container, width, fg_color='grey20')
         self.pack(side='left', fill='y')
 
+        self.container = container
         self.tipo_primitivo = tipo_primitivo
         self.espessura = espessura
         self.meu_canvas = meu_canvas
+        self.menuDeleta = None
 
         # Componentes
         BotaoTipoDePrimitivo(self, self.modo_mandala, self.tipo_primitivo)
@@ -18,7 +21,14 @@ class DrawTools(ctk.CTkFrame):
         self.bc1.place(x=15, y=85)
         self.bc2 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("mandala_cor2"), texto="Cor 2")
         BotaoRedesenhar(self, self.meu_canvas)
-        BotaoLimpaTudo(self, self.meu_canvas)
+        BotaoExclui(self, self.meu_canvas)
+
+    def callMenuDeleta(self):
+        if self.menuDeleta is None or not self.menuDeleta.winfo_exists():
+            self.menuDeleta = MenuDeleta(self.container)
+            self.menuDeleta.attributes("-topmost", True)
+        else:
+            self.menuDeleta.focus()
 
     def modo_mandala(self, option):
         if option == "mandala":
@@ -42,9 +52,9 @@ class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
         self.place(x=2, y=25)
         self.set('Figura')
 
-class BotaoLimpaTudo(ctk.CTkButton):
-    def __init__(self, container, meu_canvas, texto = 'Limpar'):
-        super().__init__(container, text=texto, command=meu_canvas.deletaTudo, width=80)
+class BotaoExclui(ctk.CTkButton):
+    def __init__(self, container, meu_canvas, texto = 'Excluir'):
+        super().__init__(container, text=texto, command=container.callMenuDeleta, width=80)
 
         self.place(x=15, y=540)
 
@@ -77,3 +87,19 @@ class EspessuraLabel(ctk.CTkLabel):
 
         ctk.CTkLabel(container, text='Espessura: ').place(x=x, y=y)
         self.place(x=x+70, y=y)
+
+class MenuDeleta(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.title("Excluir figuras")
+        self.geometry("400x200")
+        self.resizable(False, False)
+
+        ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
+
+        self.listaFiguras = Listbox(self, highlightthickness=0, bd=2, bg='#353535')
+        self.listaFiguras.configure(width=60, height=7)
+        self.listaFiguras.pack()
+
+        ctk.CTkButton(self, text='Excluir', width=80).pack(side='bottom')
+
