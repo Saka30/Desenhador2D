@@ -29,6 +29,7 @@ class AppDesenho(ctk.CTk):
         self.drawtools = DrawTools(self, self.figura, self.canvas, self.espessura)
 
         self.bind("<Control-z>", self.canvas.desfaz)
+        self.bind("<Control-l>", self.canvas.deletaTudo)
 
 
 if __name__ == '__main__':
