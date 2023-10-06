@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from tkinter import Listbox
+from tkinter import Listbox, END, MULTIPLE
+from primitivos.graficos import *
 
 
 class DrawTools(ctk.CTkFrame):
@@ -25,7 +26,7 @@ class DrawTools(ctk.CTkFrame):
 
     def callMenuDeleta(self):
         if self.menuDeleta is None or not self.menuDeleta.winfo_exists():
-            self.menuDeleta = MenuDeleta(self.container)
+            self.menuDeleta = MenuDeleta(self.container, self.meu_canvas)
             self.menuDeleta.attributes("-topmost", True)
         else:
             self.menuDeleta.focus()
@@ -52,11 +53,13 @@ class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
         self.place(x=2, y=25)
         self.set('Figura')
 
+
 class BotaoExclui(ctk.CTkButton):
-    def __init__(self, container, meu_canvas, texto = 'Excluir'):
+    def __init__(self, container, meu_canvas, texto='Excluir'):
         super().__init__(container, text=texto, command=container.callMenuDeleta, width=80)
 
         self.place(x=15, y=540)
+
 
 class BotaoRedesenhar(ctk.CTkButton):
     def __init__(self, container, meu_canvas, texto='Redesenhar'):
@@ -64,8 +67,9 @@ class BotaoRedesenhar(ctk.CTkButton):
 
         self.place(x=15, y=470)
 
+
 class BotaoCor(ctk.CTkButton):
-    def __init__(self, container,comando,texto='Escolher Cor', ):
+    def __init__(self, container, comando, texto='Escolher Cor', ):
         super().__init__(container, text=texto, command=comando, width=80)
 
 
@@ -80,26 +84,63 @@ class ControleDeEspessura(ctk.CTkSlider):
 
         self.place(x=48, y=190)
 
+
 class EspessuraLabel(ctk.CTkLabel):
     def __init__(self, container, espessura):
         super().__init__(container, textvariable=espessura, text_color='white')
         x, y = 18, 390
 
         ctk.CTkLabel(container, text='Espessura: ').place(x=x, y=y)
-        self.place(x=x+70, y=y)
+        self.place(x=x + 70, y=y)
+
 
 class MenuDeleta(ctk.CTkToplevel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, container, meu_canvas):
+        super().__init__(container)
         self.title("Excluir figuras")
         self.geometry("400x200")
         self.resizable(False, False)
+        self.meu_canvas = meu_canvas
+        self.listaPrimitivos = meu_canvas.lista_primitivos
+        self.cPrimitivos = {'cPontos': 1, 'cRetas': 1, 'cTriangulos': 1,
+                            'cRetangulos': 1, 'cCirculos': 1, 'cMandalas': 1}
 
         ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
 
-        self.listaFiguras = Listbox(self, highlightthickness=0, bd=2, bg='#353535')
+        self.listaFiguras = Listbox(self, highlightthickness=0, bd=2, bg='#353535', fg='#ffffff',
+                                    selectmode=MULTIPLE)
         self.listaFiguras.configure(width=60, height=7)
         self.listaFiguras.pack()
 
-        ctk.CTkButton(self, text='Excluir', width=80).pack(side='bottom')
+        for i in range(len(self.listaPrimitivos)):
+            match self.listaPrimitivos[i]:
+                case PontoGr():
+                    self.listaFiguras.insert(END, f'Ponto{self.cPrimitivos["cPontos"]}')
+                    self.cPrimitivos["cPontos"] += 1
+                case RetaGr():
+                    self.listaFiguras.insert(END, f'Reta{self.cPrimitivos["cRetas"]}')
+                    self.cPrimitivos["cRetas"] += 1
+                case TrianguloGr():
+                    self.listaFiguras.insert(END, f'Triângulo{self.cPrimitivos["cTriangulos"]}')
+                    self.cPrimitivos["cTriangulos"] += 1
+                case RetanguloGr():
+                    self.listaFiguras.insert(END, f'Retângulo{self.cPrimitivos["cRetangulos"]}')
+                    self.cPrimitivos["cRetangulos"] += 1
+                case CirculoGr():
+                    self.listaFiguras.insert(END, f'Circulo{self.cPrimitivos["cCirculos"]}')
+                    self.cPrimitivos["cCirculos"] += 1
+                case Mandala():
+                    self.listaFiguras.insert(END, f'Mandala{self.cPrimitivos["cMandalas"]}')
+                    self.cPrimitivos["cMandalas"] += 1
+
+        ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom')
+
+    def destroyPrimitivos(self):
+
+        for index_selecionado in self.listaFiguras.curselection():
+            primitivo_selecionado = self.listaPrimitivos[index_selecionado]
+            self.listaPrimitivos.remove(primitivo_selecionado)
+            self.listaFiguras.delete(index_selecionado)
+            self.meu_canvas.deletaTudo()
+            self.meu_canvas.redesenhar()
 
