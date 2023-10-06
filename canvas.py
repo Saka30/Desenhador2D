@@ -28,7 +28,6 @@ class AreaDeDesenho(Canvas):
 
         #cria um menu de opçoes
         self.subMenu = Menu(self, tearoff=0)
-        self.subMenu.add_command(label="Limpar tela", command=self.deletaTudo)
         self.subMenu.add_command(label="Limpar memória", command=self.limpaMemoria)
         self.subMenu.add_separator()
         self.subMenu.add_command(label="Sair", command=container.quit)
@@ -39,7 +38,7 @@ class AreaDeDesenho(Canvas):
                                         font=ctk.CTkFont(family='Consolas', size=14)).place(x=590, y=575)
 
         # start_point
-        self.ponto_mouse_anterior = PontoGr(x=None, y=None, cor=self.cor, width=self.espessura)
+        self.ponto_mouse_anterior = PontoGr(x=None, y=None, cor=self.cor, width=self.espessura.get())
 
         # input
         self.bind("<Button-1>", self.desenhaPrimitivo)
@@ -52,9 +51,6 @@ class AreaDeDesenho(Canvas):
     def callSubMenu(self, event):
         self.subMenu.post(event.x_root, event.y_root)
 
-    def callMenuDeleta(self):
-        MenuDeleta()
-
     def desfaz(self, event):
         if not self.lista_primitivos.is_empty():
             self.lista_primitivos.pop()
@@ -63,7 +59,7 @@ class AreaDeDesenho(Canvas):
 
 
     def desenhaPrimitivo(self, event):
-        ponto_do_mouse_atual = PontoGr(event.x, event.y, self.cor, self.espessura)
+        ponto_do_mouse_atual = PontoGr(event.x, event.y, self.cor, self.espessura.get())
         primitivo = None
         match self.tipo_primitivo.get():
             case 'ponto':
@@ -106,10 +102,10 @@ class AreaDeDesenho(Canvas):
     def desenhaRetangulo(self, ponto1, ponto2):
 
         if ponto1 != Ponto(None, None):
-            retang = RetanguloGr(ponto1, ponto2, self.espessura)
+            retang = RetanguloGr(ponto1, ponto2, self.espessura.get())
             retang.desenhaRetangulo(self)
 
-            self.ponto_mouse_anterior = PontoGr(x=None, y=None, width=self.espessura)
+            self.ponto_mouse_anterior = PontoGr(x=None, y=None, width=self.espessura.get())
 
             return retang
         else:
@@ -124,7 +120,7 @@ class AreaDeDesenho(Canvas):
     def desenhaCincunferencia(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
-            circ = CirculoGr(self.ponto_mouse_anterior, raio, self.cor, self.espessura)
+            circ = CirculoGr(self.ponto_mouse_anterior, raio, self.cor, self.espessura.get())
             circ.desenhaCircunferencia(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
@@ -136,7 +132,7 @@ class AreaDeDesenho(Canvas):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
             # mand = Mandala(self.ponto_mouse_anterior, raio, '#417E4D', '#DD3B35', self.espessura)
-            mand = Mandala(self.ponto_mouse_anterior, raio, self.mandala_cor1, self.mandala_cor2, self.espessura)
+            mand = Mandala(self.ponto_mouse_anterior, raio, self.mandala_cor1, self.mandala_cor2, self.espessura.get())
             mand.desenhaMandala(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)

@@ -21,7 +21,7 @@ class PontoGr(Ponto):
         return PontoGr(x=self.x, y=self.y, cor=self.cor, width=self.width)
 
     def desenhaPonto(self, canvas):
-        raio = self.width.get()
+        raio = self.width
         canvas.create_oval(
             (self.x - raio, self.y - raio),
             (self.x + raio, self.y + raio),
