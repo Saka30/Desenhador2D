@@ -21,7 +21,11 @@ class Ponto:
         return Ponto(self.x, self.y)
 
     def __eq__(self, outro_ponto):
-        return self.x == outro_ponto.x and self.y == outro_ponto.y
+        is_equal = False
+        if isinstance(outro_ponto, Ponto):
+            if self.x == outro_ponto.x and self.y == outro_ponto.y:
+                is_equal = True
+        return is_equal
 
     def __str__(self):
         return f"({self.x},{self.y})"
