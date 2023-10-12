@@ -38,7 +38,7 @@ class AreaDeDesenho(Canvas):
                                         font=ctk.CTkFont(family='Consolas', size=14)).place(x=590, y=575)
 
         # start_point
-        self.ponto_mouse_anterior = PontoGr(x=None, y=None, cor=self.cor, width=self.espessura.get())
+        self.ponto_mouse_anterior = Ponto(x=None, y=None)
 
         # input
         self.bind("<Button-1>", self.desenhaPrimitivo)
@@ -59,7 +59,7 @@ class AreaDeDesenho(Canvas):
 
 
     def desenhaPrimitivo(self, event):
-        ponto_do_mouse_atual = PontoGr(event.x, event.y, self.cor, self.espessura.get())
+        ponto_do_mouse_atual = Ponto(event.x, event.y)
         primitivo = None
         match self.tipo_primitivo.get():
             case 'ponto':
@@ -84,16 +84,17 @@ class AreaDeDesenho(Canvas):
 
 
     def desenhaPonto(self, ponto):
-        ponto.desenhaPonto(self)
+        p = PontoGr(ponto.x, ponto.y, self.cor, self.espessura.get())
+        p.desenhaPonto(self)
 
-        return ponto
+        return p
 
     def desenhaReta(self, ponto1, ponto2):
 
         if ponto1 != Ponto(None, None):
-            reta = RetaGr(ponto1, ponto2)
+            reta = RetaGr(ponto1, ponto2, self.cor, self.espessura.get())
             reta.desenhaReta(self)
-            self.ponto_mouse_anterior = PontoGr(x=None, y=None, width=self.espessura)
+            self.ponto_mouse_anterior = Ponto(x=None, y=None)
 
             return reta
         else:
@@ -102,17 +103,17 @@ class AreaDeDesenho(Canvas):
     def desenhaRetangulo(self, ponto1, ponto2):
 
         if ponto1 != Ponto(None, None):
-            retang = RetanguloGr(ponto1, ponto2, self.espessura.get())
+            retang = RetanguloGr(ponto1, ponto2, self.cor, self.espessura.get())
             retang.desenhaRetangulo(self)
 
-            self.ponto_mouse_anterior = PontoGr(x=None, y=None, width=self.espessura.get())
+            self.ponto_mouse_anterior = Ponto(x=None, y=None)
 
             return retang
         else:
             self.ponto_mouse_anterior = ponto2
 
     def desenhaTriangulo(self, pontos):
-        triang = TrianguloGr(pontos)
+        triang = TrianguloGr(pontos, self.cor, self.espessura.get())
         triang.desenhaTriangulo(self)
 
         return triang
@@ -131,7 +132,6 @@ class AreaDeDesenho(Canvas):
     def desenhaMandala(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
-            # mand = Mandala(self.ponto_mouse_anterior, raio, '#417E4D', '#DD3B35', self.espessura)
             mand = Mandala(self.ponto_mouse_anterior, raio, self.mandala_cor1, self.mandala_cor2, self.espessura.get())
             mand.desenhaMandala(self)
 

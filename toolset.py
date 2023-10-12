@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import Listbox, END, MULTIPLE
+from tkinter import Listbox, END
 from primitivos.graficos import *
 
 
@@ -107,16 +107,15 @@ class MenuDeleta(ctk.CTkToplevel):
 
         ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
 
-        self.listaFiguras = Listbox(self, highlightthickness=0, bd=2, bg='#353535', fg='#ffffff',
-                                    selectmode=MULTIPLE)
+        self.listaFiguras = Listbox(self, highlightthickness=0, bd=2, bg='#353535', fg='#ffffff')
         self.listaFiguras.configure(width=60, height=7)
         self.listaFiguras.pack()
 
         for i in range(len(self.listaPrimitivos)):
-            match self.listaPrimitivos[i]:
+            primitivo = self.listaPrimitivos[i]
+            match primitivo:
                 case PontoGr():
-                    self.listaFiguras.insert(END, f'Ponto{self.cPrimitivos["cPontos"]}')
-                    self.cPrimitivos["cPontos"] += 1
+                    self.listaFiguras.insert(END, primitivo.id)
                 case RetaGr():
                     self.listaFiguras.insert(END, f'Reta{self.cPrimitivos["cRetas"]}')
                     self.cPrimitivos["cRetas"] += 1
