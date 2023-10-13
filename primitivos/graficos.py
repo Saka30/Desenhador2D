@@ -1,5 +1,5 @@
 from primitivos import *
-
+from tkinter import Label
 
 class PontoGr(Ponto):
     _id = 0
@@ -10,7 +10,9 @@ class PontoGr(Ponto):
         self.width = width
 
         PontoGr._id += 1
-        self.id = f'Ponto{PontoGr._id}'
+        self.id = f'ponto_{PontoGr._id}'
+
+        self.tag = None
 
     def __add__(self, numero):
         return PontoGr(self.x + numero, self.y + numero, self.cor, self.width)
@@ -39,6 +41,14 @@ class PontoGr(Ponto):
         self.cor = '#FFFFFF'
         self.desenhaPonto(canvas)
 
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='p' + self.id[6:], bg='white')
+            self.tag.place(x=self.x + self.width + 5, y=self.y - 5)
+        else:
+            if self.tag:
+                self.tag.place_forget()
+
 
 class RetaGr(Reta):
     _id = 0
@@ -49,7 +59,9 @@ class RetaGr(Reta):
         self.width = width
 
         RetaGr._id += 1
-        self.id = f"Reta{RetaGr._id}"
+        self.id = f"reta_{RetaGr._id}"
+
+        self.tag = None
 
     def desenhaReta(self, canvas):
         dx = self.p2.x - self.p1.x
@@ -78,6 +90,14 @@ class RetaGr(Reta):
     def __del__(self):
         RetaGr._id -= 1
 
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='r' + self.id[5:], bg='white')
+            self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y -5)
+        else:
+            if self.tag:
+                self.tag.place_forget()
+
 
 class RetanguloGr(Retangulo):
     _id = 0
@@ -88,7 +108,9 @@ class RetanguloGr(Retangulo):
         self.width = width
 
         RetanguloGr._id += 1
-        self.id = f"Retângulo{RetanguloGr._id}"
+        self.id = f"retang_{RetanguloGr._id}"
+
+        self.tag = None
 
     def desenhaRetangulo(self, canvas):
         RetaGr(self.p1, PontoGr(self.p1.x, self.p2.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
@@ -103,6 +125,14 @@ class RetanguloGr(Retangulo):
         self.p2.cor = '#FFFFFF'
         self.desenhaRetangulo(canvas)
 
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='rtg' + self.id[7:], bg='white')
+            self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y + self.width + 3)
+        else:
+            if self.tag:
+                self.tag.place_forget()
+
 
 class TrianguloGr(Triangulo):
     _id = 0
@@ -113,7 +143,9 @@ class TrianguloGr(Triangulo):
         self.width = width
 
         TrianguloGr._id += 1
-        self.id = f"Triângulo{TrianguloGr._id}"
+        self.id = f"triang_{TrianguloGr._id}"
+
+        self.tag = None
 
     def desenhaTriangulo(self, canvas):
         RetaGr(self.pontos[0], self.pontos[1], self.cor, self.width).desenhaReta(canvas)
@@ -128,6 +160,16 @@ class TrianguloGr(Triangulo):
     def __del__(self):
         TrianguloGr._id -= 1
 
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='trg' + self.id[7:], bg='white')
+            self.tag.place(x = self.pontos[2].x + self.width + 5, y = self.pontos[2].y + self.width + 3)
+        else:
+            if self.tag:
+                self.tag.place_forget()
+
+
+
 
 class CirculoGr(Circulo):
     _id = 0
@@ -138,7 +180,9 @@ class CirculoGr(Circulo):
         self.width = width
 
         CirculoGr._id += 1
-        self.id = f"Circulo{CirculoGr._id}"
+        self.id = f"circ_{CirculoGr._id}"
+
+        self.tag = None
 
     def desenhaCircunferencia(self, canvas):
         angulo = 0
@@ -155,6 +199,14 @@ class CirculoGr(Circulo):
     def __del__(self):
         CirculoGr._id -= 1
 
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='c' + self.id[5:], bg='white')
+            self.tag.place(x = self.centro.x, y = self.centro.y)
+        else:
+            if self.tag:
+                self.tag.place_forget()
+
 
 class Mandala:
     _id = 0
@@ -167,7 +219,9 @@ class Mandala:
         self.width = width
 
         Mandala._id += 1
-        self.id = f"Mandala{Mandala._id}"
+        self.id = f"mand_{Mandala._id}"
+
+        self.tag = None
 
     def desenhaMandala(self, canvas):
         # CIRCULOS
@@ -299,3 +353,11 @@ class Mandala:
 
     def __del__(self):
         Mandala._id -= 1
+
+    def exibe_tag(self, meu_canvas, flag):
+        if flag:
+            self.tag = Label(meu_canvas, text='m' + self.id[5:], bg='white')
+            self.tag.place(x=self.centro.x +self.raio - self.width, y = self.centro.y + self.raio + self.width + 15)
+        else:
+            if self.tag:
+                self.tag.place_forget()

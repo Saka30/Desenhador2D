@@ -53,7 +53,8 @@ class AreaDeDesenho(Canvas):
 
     def desfaz(self, event):
         if not self.lista_primitivos.is_empty():
-            self.lista_primitivos.pop()
+            p = self.lista_primitivos.pop()
+            p.exibe_tag(self, False)
             self.deletaTudo()
             self.redesenhar()
 

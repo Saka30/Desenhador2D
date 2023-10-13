@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from tkinter import Listbox, END
-from primitivos.graficos import *
 
 
 class DrawTools(ctk.CTkFrame):
@@ -114,11 +113,21 @@ class MenuDeleta(ctk.CTkToplevel):
 
         ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom')
 
+        for i in range(len(self.listaPrimitivos)):
+            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, True)
+
+        self.bind("<Destroy>", self.close_window)
+
     def destroyPrimitivos(self):
 
         for index_selecionado in self.listaFiguras.curselection():
             primitivo_selecionado = self.listaPrimitivos[index_selecionado]
             self.listaPrimitivos.remove(primitivo_selecionado)
+            primitivo_selecionado.exibe_tag(self.meu_canvas, False)
             self.listaFiguras.delete(index_selecionado)
             self.meu_canvas.deletaTudo()
             self.meu_canvas.redesenhar()
+
+    def close_window(self, event):
+        for i in range(len(self.listaPrimitivos)):
+            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, False)
