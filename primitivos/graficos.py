@@ -41,11 +41,15 @@ class PontoGr(Ponto):
 
 
 class RetaGr(Reta):
+    _id = 0
 
     def __init__(self, p1, p2, cor, width):
         super().__init__(p1, p2)
         self.cor = cor
-        self. width = width
+        self.width = width
+
+        RetaGr._id += 1
+        self.id = f"Reta{RetaGr._id}"
 
     def desenhaReta(self, canvas):
         dx = self.p2.x - self.p1.x
@@ -71,20 +75,28 @@ class RetaGr(Reta):
         self.p1.cor = '#FFFFFF'
         self.desenhaReta(canvas)
 
+    def __del__(self):
+        RetaGr._id -= 1
+
 
 class RetanguloGr(Retangulo):
+    _id = 0
 
     def __init__(self, p1, p2, cor, width):
         super().__init__(p1, p2)
         self.cor = cor
         self.width = width
 
+        RetanguloGr._id += 1
+        self.id = f"Retângulo{RetanguloGr._id}"
+
     def desenhaRetangulo(self, canvas):
         RetaGr(self.p1, PontoGr(self.p1.x, self.p2.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
         RetaGr(PontoGr(self.p1.x, self.p2.y, self.cor, self.width), self.p2, self.cor, self.width).desenhaReta(canvas)
         RetaGr(self.p2, PontoGr(self.p2.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
         RetaGr(PontoGr(self.p2.x, self.p1.y, self.cor, self.width),
-               PontoGr(self.p1.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
+                    PontoGr(self.p1.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
+
 
     def apagar(self, canvas):
         self.p1.cor = '#FFFFFF'
@@ -93,11 +105,15 @@ class RetanguloGr(Retangulo):
 
 
 class TrianguloGr(Triangulo):
+    _id = 0
 
     def __init__(self, pontos, cor, width):
         super().__init__(pontos)
         self.cor = cor
         self.width = width
+
+        TrianguloGr._id += 1
+        self.id = f"Triângulo{TrianguloGr._id}"
 
     def desenhaTriangulo(self, canvas):
         RetaGr(self.pontos[0], self.pontos[1], self.cor, self.width).desenhaReta(canvas)
@@ -109,12 +125,20 @@ class TrianguloGr(Triangulo):
             p.cor = '#FFFFFF'
         self.desenhaTriangulo(canvas)
 
+    def __del__(self):
+        TrianguloGr._id -= 1
+
 
 class CirculoGr(Circulo):
+    _id = 0
+
     def __init__(self, centro, raio, cor, width=None):
         super().__init__(centro, raio)
         self.cor = cor
         self.width = width
+
+        CirculoGr._id += 1
+        self.id = f"Circulo{CirculoGr._id}"
 
     def desenhaCircunferencia(self, canvas):
         angulo = 0
@@ -128,14 +152,22 @@ class CirculoGr(Circulo):
         self.cor = '#FFFFFF'
         self.desenhaCircunferencia(canvas)
 
+    def __del__(self):
+        CirculoGr._id -= 1
+
 
 class Mandala:
+    _id = 0
+
     def __init__(self, centro, raio, corCirc, corRetas, width):
         self.centro = centro
         self.raio = raio
         self.corCirc = corCirc
         self.corRetas = corRetas
         self.width = width
+
+        Mandala._id += 1
+        self.id = f"Mandala{Mandala._id}"
 
     def desenhaMandala(self, canvas):
         # CIRCULOS
@@ -264,3 +296,6 @@ class Mandala:
         self.corCirc = '#FFFFFF'
 
         self.desenhaMandala(canvas)
+
+    def __del__(self):
+        Mandala._id -= 1

@@ -102,8 +102,6 @@ class MenuDeleta(ctk.CTkToplevel):
         self.resizable(False, False)
         self.meu_canvas = meu_canvas
         self.listaPrimitivos = meu_canvas.lista_primitivos
-        self.cPrimitivos = {'cPontos': 1, 'cRetas': 1, 'cTriangulos': 1,
-                            'cRetangulos': 1, 'cCirculos': 1, 'cMandalas': 1}
 
         ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
 
@@ -112,25 +110,7 @@ class MenuDeleta(ctk.CTkToplevel):
         self.listaFiguras.pack()
 
         for i in range(len(self.listaPrimitivos)):
-            primitivo = self.listaPrimitivos[i]
-            match primitivo:
-                case PontoGr():
-                    self.listaFiguras.insert(END, primitivo.id)
-                case RetaGr():
-                    self.listaFiguras.insert(END, f'Reta{self.cPrimitivos["cRetas"]}')
-                    self.cPrimitivos["cRetas"] += 1
-                case TrianguloGr():
-                    self.listaFiguras.insert(END, f'Triângulo{self.cPrimitivos["cTriangulos"]}')
-                    self.cPrimitivos["cTriangulos"] += 1
-                case RetanguloGr():
-                    self.listaFiguras.insert(END, f'Retângulo{self.cPrimitivos["cRetangulos"]}')
-                    self.cPrimitivos["cRetangulos"] += 1
-                case CirculoGr():
-                    self.listaFiguras.insert(END, f'Circulo{self.cPrimitivos["cCirculos"]}')
-                    self.cPrimitivos["cCirculos"] += 1
-                case Mandala():
-                    self.listaFiguras.insert(END, f'Mandala{self.cPrimitivos["cMandalas"]}')
-                    self.cPrimitivos["cMandalas"] += 1
+            self.listaFiguras.insert(END, self.listaPrimitivos[i].id)
 
         ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom')
 
@@ -142,4 +122,3 @@ class MenuDeleta(ctk.CTkToplevel):
             self.listaFiguras.delete(index_selecionado)
             self.meu_canvas.deletaTudo()
             self.meu_canvas.redesenhar()
-
