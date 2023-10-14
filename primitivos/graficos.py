@@ -43,7 +43,9 @@ class PontoGr(Ponto):
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='p' + self.id[6:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='p' + self.id[6:], bg='white')
+
             self.tag.place(x=self.x + self.width + 5, y=self.y - 5)
         else:
             if self.tag:
@@ -129,7 +131,9 @@ class RetanguloGr(Retangulo):
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='rtg' + self.id[7:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='rtg' + self.id[7:], bg='white')
+
             self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y + self.width + 3)
         else:
             if self.tag:
@@ -164,7 +168,9 @@ class TrianguloGr(Triangulo):
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='trg' + self.id[7:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='trg' + self.id[7:], bg='white')
+
             self.tag.place(x = self.pontos[2].x + self.width + 5, y = self.pontos[2].y + self.width + 3)
         else:
             if self.tag:
@@ -203,7 +209,9 @@ class CirculoGr(Circulo):
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='c' + self.id[5:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='c' + self.id[5:], bg='white')
+
             self.tag.place(x = self.centro.x, y = self.centro.y)
         else:
             if self.tag:
@@ -358,7 +366,9 @@ class Mandala:
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='m' + self.id[5:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='m' + self.id[5:], bg='white')
+
             self.tag.place(x=self.centro.x +self.raio - self.width, y = self.centro.y + self.raio + self.width + 15)
         else:
             if self.tag:
