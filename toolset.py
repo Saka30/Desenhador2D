@@ -12,6 +12,7 @@ class DrawTools(ctk.CTkFrame):
         self.espessura = espessura
         self.meu_canvas = meu_canvas
         self.menuDeleta = None
+        self.check_var = meu_canvas.check_var
 
         # Componentes
         BotaoTipoDePrimitivo(self, self.modo_mandala, self.tipo_primitivo)
@@ -20,6 +21,8 @@ class DrawTools(ctk.CTkFrame):
         self.bc1 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("cor"))
         self.bc1.place(x=15, y=85)
         self.bc2 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("mandala_cor2"), texto="Cor 2")
+        ctk.CTkCheckBox(self, text='Mostrar tags', command=self.mostrar_tags,
+                        variable=self.check_var, onvalue="on", offvalue="off").place(x=10, y=430)
         BotaoRedesenhar(self, self.meu_canvas)
         BotaoExclui(self, self.meu_canvas)
 
@@ -27,6 +30,7 @@ class DrawTools(ctk.CTkFrame):
         if self.menuDeleta is None or not self.menuDeleta.winfo_exists():
             self.menuDeleta = MenuDeleta(self.container, self.meu_canvas)
             self.menuDeleta.attributes("-topmost", True)
+            self.menuDeleta.protocol("WM_DELETE_WINDOW", self.menuDeleta.close_window)
         else:
             self.menuDeleta.focus()
 
@@ -39,6 +43,12 @@ class DrawTools(ctk.CTkFrame):
             self.bc2.place_forget()
             self.bc1.configure(text="Escolher Cor")
             self.bc1.configure(command=lambda: self.meu_canvas.pegaCor("cor"))
+
+    def mostrar_tags(self):
+        flag = True if self.check_var.get() == "on" else False
+        primitivos = self.meu_canvas.lista_primitivos
+        for i in range(len(primitivos)):
+            primitivos[i].exibe_tag(self.meu_canvas, flag)
 
 
 class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
@@ -57,14 +67,14 @@ class BotaoExclui(ctk.CTkButton):
     def __init__(self, container, meu_canvas, texto='Excluir'):
         super().__init__(container, text=texto, command=container.callMenuDeleta, width=80)
 
-        self.place(x=15, y=540)
+        self.place(x=15, y=550)
 
 
 class BotaoRedesenhar(ctk.CTkButton):
     def __init__(self, container, meu_canvas, texto='Redesenhar'):
         super().__init__(container, text=texto, command=meu_canvas.redesenhar, width=80)
 
-        self.place(x=15, y=470)
+        self.place(x=15, y=490)
 
 
 class BotaoCor(ctk.CTkButton):
@@ -81,13 +91,13 @@ class ControleDeEspessura(ctk.CTkSlider):
                          number_of_steps=30,
                          orientation='vertical')
 
-        self.place(x=48, y=190)
+        self.place(x=48, y=170)
 
 
 class EspessuraLabel(ctk.CTkLabel):
     def __init__(self, container, espessura):
         super().__init__(container, textvariable=espessura, text_color='white')
-        x, y = 18, 390
+        x, y = 18, 380
 
         ctk.CTkLabel(container, text='Espessura: ').place(x=x, y=y)
         self.place(x=x + 70, y=y)
@@ -101,6 +111,7 @@ class MenuDeleta(ctk.CTkToplevel):
         self.resizable(False, False)
         self.meu_canvas = meu_canvas
         self.listaPrimitivos = meu_canvas.lista_primitivos
+        self.container = container
 
         ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
 
@@ -116,18 +127,19 @@ class MenuDeleta(ctk.CTkToplevel):
         for i in range(len(self.listaPrimitivos)):
             self.listaPrimitivos[i].exibe_tag(self.meu_canvas, True)
 
-        self.bind("<Destroy>", self.close_window)
-
     def destroyPrimitivos(self):
 
         for index_selecionado in self.listaFiguras.curselection():
             primitivo_selecionado = self.listaPrimitivos[index_selecionado]
-            self.listaPrimitivos.remove(primitivo_selecionado)
             primitivo_selecionado.exibe_tag(self.meu_canvas, False)
+            self.listaPrimitivos.remove(primitivo_selecionado)
             self.listaFiguras.delete(index_selecionado)
             self.meu_canvas.deletaTudo()
             self.meu_canvas.redesenhar()
 
-    def close_window(self, event):
+    def close_window(self):
         for i in range(len(self.listaPrimitivos)):
             self.listaPrimitivos[i].exibe_tag(self.meu_canvas, False)
+
+        self.container.drawtools.mostrar_tags()
+        self.destroy()

@@ -22,11 +22,12 @@ class AreaDeDesenho(Canvas):
         self.espessura = espessura
         self.tipo_primitivo = tipo_primitivo
         self.coordenadas_var = ctk.StringVar(value='')
+        self.check_var = ctk.StringVar(value="off")
 
-        #Armazenador de primitivos
+        # Armazenador de primitivos
         self.lista_primitivos = LinkedList()
 
-        #cria um menu de opçoes
+        # cria um menu de opçoes
         self.subMenu = Menu(self, tearoff=0)
         self.subMenu.add_command(label="Limpar memória", command=self.limpaMemoria)
         self.subMenu.add_separator()
@@ -58,7 +59,6 @@ class AreaDeDesenho(Canvas):
             self.deletaTudo()
             self.redesenhar()
 
-
     def desenhaPrimitivo(self, event):
         ponto_do_mouse_atual = Ponto(event.x, event.y)
         primitivo = None
@@ -82,7 +82,8 @@ class AreaDeDesenho(Canvas):
 
         if primitivo is not None:
             self.lista_primitivos.append(primitivo)
-
+            if self.check_var.get() == "on":
+                primitivo.exibe_tag(self, True)
 
     def desenhaPonto(self, ponto):
         p = PontoGr(ponto.x, ponto.y, self.cor, self.espessura.get())

@@ -92,7 +92,9 @@ class RetaGr(Reta):
 
     def exibe_tag(self, meu_canvas, flag):
         if flag:
-            self.tag = Label(meu_canvas, text='r' + self.id[5:], bg='white')
+            if self.tag is None:
+                self.tag = Label(meu_canvas, text='r' + self.id[5:], bg='white')
+
             self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y -5)
         else:
             if self.tag:
