@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import Listbox, END
+from tkinter import Listbox, END, Canvas
 
 
 class DrawTools(ctk.CTkFrame):
@@ -18,9 +18,10 @@ class DrawTools(ctk.CTkFrame):
         BotaoTipoDePrimitivo(self, self.modo_mandala, self.tipo_primitivo)
         ControleDeEspessura(self, self.espessura)
         EspessuraLabel(self, self.espessura)
-        self.bc1 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("cor"))
-        self.bc1.place(x=15, y=85)
-        self.bc2 = BotaoCor(self, lambda: self.meu_canvas.pegaCor("mandala_cor2"), texto="Cor 2")
+        self.bc1 = BotaoCor(self, meu_canvas.cor, "cor")
+        self.bc1.place(x=45, y=85)
+        self.bc2 = BotaoCor(self, meu_canvas.mandala_cor2, "mandala_cor2")
+        ctk.CTkLabel(self,text='Escolher Cor').place(x=25, y=120)
         ctk.CTkCheckBox(self, text='Mostrar tags', command=self.mostrar_tags,
                         variable=self.check_var, onvalue="on", offvalue="off").place(x=10, y=430)
         BotaoRedesenhar(self, self.meu_canvas)
@@ -36,13 +37,15 @@ class DrawTools(ctk.CTkFrame):
 
     def modo_mandala(self, option):
         if option == "mandala":
-            self.bc2.place(x=15, y=135)
-            self.bc1.configure(text="Cor 1")
-            self.bc1.configure(command=lambda: self.meu_canvas.pegaCor("mandala_cor1"))
+            self.bc1.place(x=15, y=85)
+            self.bc2.place(x=72, y=85)
+            self.bc1.nome_atributo = "mandala_cor1"
+            self.bc1.configure(bg = self.meu_canvas.mandala_cor1)
         else:
             self.bc2.place_forget()
-            self.bc1.configure(text="Escolher Cor")
-            self.bc1.configure(command=lambda: self.meu_canvas.pegaCor("cor"))
+            self.bc1.place(x=45, y=85)
+            self.bc1.nome_atributo = "cor"
+            self.bc1.configure(bg = self.meu_canvas.cor)
 
     def mostrar_tags(self):
         flag = True if self.check_var.get() == "on" else False
@@ -77,9 +80,19 @@ class BotaoRedesenhar(ctk.CTkButton):
         self.place(x=15, y=490)
 
 
-class BotaoCor(ctk.CTkButton):
-    def __init__(self, container, comando, texto='Escolher Cor', ):
-        super().__init__(container, text=texto, command=comando, width=80)
+class BotaoCor(Canvas):
+    def __init__(self, container, cor, nome_atributo):
+        self.cor = cor
+        self.nome_atributo = nome_atributo
+        self.meu_canvas = container.meu_canvas
+        super().__init__(container, height=20, width=20, relief='sunken',
+                         bd=2, bg = self.cor,  highlightbackground='gray')
+
+        self.bind("<Button-1>", lambda event: self.altera_cor(self.nome_atributo))
+
+    def altera_cor(self, nome_atributo):
+        self.meu_canvas.pegaCor(nome_atributo)
+        self.configure(bg=getattr(self.meu_canvas, nome_atributo))
 
 
 class ControleDeEspessura(ctk.CTkSlider):
