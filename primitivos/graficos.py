@@ -129,6 +129,9 @@ class RetanguloGr(Retangulo):
         self.p2.cor = '#FFFFFF'
         self.desenhaRetangulo(canvas)
 
+    def __del__(self):
+        RetanguloGr._id -= 1
+
     def exibe_tag(self, meu_canvas, flag):
         if flag:
             if self.tag is None:

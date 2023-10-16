@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import Listbox, END, Canvas
+from tkinter import Listbox, END, Canvas, Menu, filedialog
 
 
 class DrawTools(ctk.CTkFrame):
@@ -15,13 +15,14 @@ class DrawTools(ctk.CTkFrame):
         self.check_var = meu_canvas.check_var
 
         # Componentes
+        BotaoArquivo(self)
         BotaoTipoDePrimitivo(self, self.modo_mandala, self.tipo_primitivo)
         ControleDeEspessura(self, self.espessura)
         EspessuraLabel(self, self.espessura)
         self.bc1 = BotaoCor(self, meu_canvas.cor, "cor")
-        self.bc1.place(x=45, y=85)
+        self.bc1.place(x=45, y=105)
         self.bc2 = BotaoCor(self, meu_canvas.mandala_cor2, "mandala_cor2")
-        ctk.CTkLabel(self,text='Escolher Cor').place(x=25, y=120)
+        ctk.CTkLabel(self,text='Escolher Cor').place(x=25, y=140)
         ctk.CTkCheckBox(self, text='Mostrar tags', command=self.mostrar_tags,
                         variable=self.check_var, onvalue="on", offvalue="off").place(x=10, y=430)
         BotaoRedesenhar(self, self.meu_canvas)
@@ -37,13 +38,13 @@ class DrawTools(ctk.CTkFrame):
 
     def modo_mandala(self, option):
         if option == "mandala":
-            self.bc1.place(x=15, y=85)
-            self.bc2.place(x=72, y=85)
+            self.bc1.place(x=15, y=105)
+            self.bc2.place(x=72, y=105)
             self.bc1.nome_atributo = "mandala_cor1"
             self.bc1.configure(bg = self.meu_canvas.mandala_cor1)
         else:
             self.bc2.place_forget()
-            self.bc1.place(x=45, y=85)
+            self.bc1.place(x=45, y=105)
             self.bc1.nome_atributo = "cor"
             self.bc1.configure(bg = self.meu_canvas.cor)
 
@@ -52,6 +53,38 @@ class DrawTools(ctk.CTkFrame):
         primitivos = self.meu_canvas.lista_primitivos
         for i in range(len(primitivos)):
             primitivos[i].exibe_tag(self.meu_canvas, flag)
+
+class BotaoArquivo(ctk.CTkLabel):
+    def __init__(self, container):
+        super().__init__(container, text="Arquivo", bg_color='white', fg_color='#121212',
+                         width=120, height=30, font=('San Francisco', 13), pady=8)
+        self.place(x=0, y=0)
+
+        self.arquivo_selecionado = None
+
+        self.fileMenu = Menu(self, tearoff=0)
+        self.fileMenu.add_command(label="Abrir", command=self.abrirArquivo)
+        self.fileMenu.add_command(label='Salvar')
+        self.fileMenu.add_separator()
+        self.fileMenu.add_command(label="Sair", command=container.quit)
+
+        self.bind("<Enter>", self.selecionado)
+        self.bind("<Leave>", self.desselecionado)
+        self.bind("<Button-1>", self.callMenuSalvar)
+
+    def callMenuSalvar(self, event):
+        self.fileMenu.post(event.x_root, event.y_root)
+
+    def abrirArquivo(self):
+        self.arquivo_selecionado = filedialog.askopenfilename(initialdir='Downloads',
+                                                              title='Selecionar arquivo',
+                                                              filetypes=(("json files", '*.json'),))
+
+    def selecionado(self, event):
+        self.configure(fg_color='#646464')
+
+    def desselecionado(self, event):
+        self.configure(fg_color='#121212')
 
 
 class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
@@ -62,7 +95,7 @@ class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
                          variable=tipo_primitvo,
                          command=comando)
 
-        self.place(x=2, y=25)
+        self.place(x=2, y=50)
         self.set('Figura')
 
 
