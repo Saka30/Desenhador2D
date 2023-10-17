@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from json_utils import JsonReader
 from tkinter import Listbox, END, Canvas, Menu, filedialog
 
 
@@ -61,6 +62,7 @@ class BotaoArquivo(ctk.CTkLabel):
         self.place(x=0, y=0)
 
         self.arquivo_selecionado = None
+        self.meu_canvas = container.meu_canvas
 
         self.fileMenu = Menu(self, tearoff=0)
         self.fileMenu.add_command(label="Abrir", command=self.abrirArquivo)
@@ -79,6 +81,11 @@ class BotaoArquivo(ctk.CTkLabel):
         self.arquivo_selecionado = filedialog.askopenfilename(initialdir='Downloads',
                                                               title='Selecionar arquivo',
                                                               filetypes=(("json files", '*.json'),))
+        if self.arquivo_selecionado != '':
+            with open(self.arquivo_selecionado) as file_json:
+                self.meu_canvas.lista_primitivos.clear()
+                self.meu_canvas.lista_primitivos = JsonReader.read(file_json)
+                self.meu_canvas.redesenhar()
 
     def selecionado(self, event):
         self.configure(fg_color='#646464')

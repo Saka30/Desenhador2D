@@ -1,6 +1,7 @@
 from primitivos import *
 from tkinter import Label
 
+
 class PontoGr(Ponto):
     _id = 0
 
@@ -74,7 +75,7 @@ class RetaGr(Reta):
         else:
             steps = abs(dy)
 
-        steps = round(1 if steps == 0 else steps)
+        steps = round(1 if 0 <= steps <= 1 else steps)
 
         incremento_x = dx / float(steps)
         incremento_y = dy / float(steps)
@@ -97,7 +98,7 @@ class RetaGr(Reta):
             if self.tag is None:
                 self.tag = Label(meu_canvas, text='r' + self.id[5:], bg='white')
 
-            self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y -5)
+            self.tag.place(x=self.p2.x + self.width + 5, y=self.p2.y - 5)
         else:
             if self.tag:
                 self.tag.place_forget()
@@ -121,8 +122,7 @@ class RetanguloGr(Retangulo):
         RetaGr(PontoGr(self.p1.x, self.p2.y, self.cor, self.width), self.p2, self.cor, self.width).desenhaReta(canvas)
         RetaGr(self.p2, PontoGr(self.p2.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
         RetaGr(PontoGr(self.p2.x, self.p1.y, self.cor, self.width),
-                    PontoGr(self.p1.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
-
+               PontoGr(self.p1.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
 
     def apagar(self, canvas):
         self.p1.cor = '#FFFFFF'
@@ -137,7 +137,7 @@ class RetanguloGr(Retangulo):
             if self.tag is None:
                 self.tag = Label(meu_canvas, text='rtg' + self.id[7:], bg='white')
 
-            self.tag.place(x = self.p2.x + self.width + 5, y = self.p2.y + self.width + 3)
+            self.tag.place(x=self.p2.x + self.width + 5, y=self.p2.y + self.width + 3)
         else:
             if self.tag:
                 self.tag.place_forget()
@@ -174,12 +174,10 @@ class TrianguloGr(Triangulo):
             if self.tag is None:
                 self.tag = Label(meu_canvas, text='trg' + self.id[7:], bg='white')
 
-            self.tag.place(x = self.pontos[2].x + self.width + 5, y = self.pontos[2].y + self.width + 3)
+            self.tag.place(x=self.pontos[2].x + self.width + 5, y=self.pontos[2].y + self.width + 3)
         else:
             if self.tag:
                 self.tag.place_forget()
-
-
 
 
 class CirculoGr(Circulo):
@@ -215,7 +213,7 @@ class CirculoGr(Circulo):
             if self.tag is None:
                 self.tag = Label(meu_canvas, text='c' + self.id[5:], bg='white')
 
-            self.tag.place(x = self.centro.x, y = self.centro.y)
+            self.tag.place(x=self.centro.x, y=self.centro.y)
         else:
             if self.tag:
                 self.tag.place_forget()
@@ -372,7 +370,7 @@ class Mandala:
             if self.tag is None:
                 self.tag = Label(meu_canvas, text='m' + self.id[5:], bg='white')
 
-            self.tag.place(x=self.centro.x +self.raio - self.width, y = self.centro.y + self.raio + self.width + 15)
+            self.tag.place(x=self.centro.x + self.raio - self.width, y=self.centro.y + self.raio + self.width + 15)
         else:
             if self.tag:
                 self.tag.place_forget()
