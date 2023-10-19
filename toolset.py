@@ -85,6 +85,7 @@ class BotaoArquivo(ctk.CTkLabel):
             with open(self.arquivo_selecionado) as file_json:
                 self.meu_canvas.lista_primitivos.clear()
                 self.meu_canvas.lista_primitivos = JsonReader.read(file_json)
+                self.meu_canvas.deletaTudo()
                 self.meu_canvas.redesenhar()
 
     def selecionado(self, event):
