@@ -17,6 +17,11 @@ class Ponto:
             return d
         return Ponto(self.x - outro, self.y - outro)
 
+    def __getitem__(self, atr):
+        if atr in dir(self):
+            return getattr(self, atr)
+        else:
+            raise KeyError(f"Chave '{atr}' não encontrada")
 
     def copiar(self):
         return Ponto(self.x, self.y)
