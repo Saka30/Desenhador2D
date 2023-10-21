@@ -2,6 +2,7 @@ import math
 
 
 class Ponto:
+    tipo = 'ponto'
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -35,6 +36,8 @@ class Ponto:
 
 
 class Reta:
+    tipo = 'reta'
+
     def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
@@ -59,16 +62,22 @@ class Reta:
 
 
 class Retangulo:
+    tipo = 'retangulo'
+
     def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
 
 
 class Triangulo:
+    tipo = 'triangulo'
+
     def __init__(self, pontos):
         self.pontos = pontos
 
 class Circulo:
+    tipo = 'circulo'
+
     def __init__(self, centro=Ponto(0,0), raio=0):
         self.centro = centro
         self.raio = raio
