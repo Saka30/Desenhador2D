@@ -2,7 +2,7 @@ from primitivos import *
 from tkinter import Label
 
 
-def normaliza(coordenada: dict) -> dict:
+def normaliza(coordenada: dict | Ponto) -> dict:
     x = coordenada['x'] / 800
     y = coordenada['y'] / 600
 
@@ -71,7 +71,9 @@ class PontoGr(Ponto):
                 self.tag.place_forget()
 
     def info(self) -> dict:
-        return {'id': self.id, 'esp': self.width, **normaliza({"x": self.x, "y": self.y}), 'cor': converte(self.cor)}
+        return {'id': self.id, 'esp': self.width,
+                **normaliza({"x": self.x, "y": self.y}),
+                'cor': converte(self.cor)}
 
 
 class RetaGr(Reta):
@@ -124,6 +126,12 @@ class RetaGr(Reta):
             if self.tag:
                 self.tag.place_forget()
 
+    def info(self) -> dict:
+        return {'id':self.id, 'esp':self.width,
+                'p1':normaliza(self.p1),
+                'p2':normaliza(self.p2),
+                'cor': converte(self.cor)}
+
 
 class RetanguloGr(Retangulo):
     _id = 0
@@ -162,6 +170,12 @@ class RetanguloGr(Retangulo):
         else:
             if self.tag:
                 self.tag.place_forget()
+
+    def info(self) -> dict:
+        return {'id':self.id, 'esp':self.width,
+                'p1':normaliza(self.p1),
+                'p2':normaliza(self.p2),
+                'cor': converte(self.cor)}
 
 
 class TrianguloGr(Triangulo):
@@ -203,6 +217,13 @@ class TrianguloGr(Triangulo):
             if self.tag:
                 self.tag.place_forget()
 
+    def info(self) -> dict:
+        return {'id':self.id, 'esp':self.width,
+                'p1':normaliza(self.pontos[0]),
+                'p2':normaliza(self.pontos[1]),
+                'p3':normaliza(self.pontos[2]),
+                'cor': converte(self.cor)}
+
 
 class CirculoGr(Circulo):
     _id = 0
@@ -242,14 +263,21 @@ class CirculoGr(Circulo):
             if self.tag:
                 self.tag.place_forget()
 
+    def info(self) -> dict:
+        return {'id':self.id, 'esp':self.width,
+                'centro':normaliza(self.centro),
+                'raio':normaliza({'x':self.raio, 'y':0})['x'],
+                'cor': converte(self.cor)}
+
 
 class Mandala:
     _id = 0
     tipo = 'mandala'
 
-    def __init__(self, centro, raio, corCirc, corRetas, width):
-        self.centro = centro
-        self.raio = raio
+    def __init__(self, p1, p2, corCirc, corRetas, width):
+        self.centro = p1
+        self.p2 = p2
+        self.raio = p2.x - p1.x
         self.corCirc = corCirc
         self.corRetas = corRetas
         self.width = width
@@ -261,7 +289,7 @@ class Mandala:
 
     def desenhaMandala(self, canvas):
         # CIRCULOS
-
+        
         # central
         c1 = CirculoGr(self.centro, self.raio, self.corCirc, self.width)
         c1.desenhaCircunferencia(canvas)
@@ -399,3 +427,10 @@ class Mandala:
         else:
             if self.tag:
                 self.tag.place_forget()
+
+    def info(self) -> dict:
+        return {'id':self.id, 'esp':self.width,
+                'p1':normaliza(self.centro),
+                'p2':normaliza(self.p2),
+                'cor1': converte(self.corCirc),
+                'cor2':converte(self.corRetas)}
