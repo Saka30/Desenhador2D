@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from json_utils import JsonReader
+from json_utils import JsonHandler
 from tkinter import Listbox, END, Canvas, Menu, filedialog
 
 
@@ -66,7 +66,7 @@ class BotaoArquivo(ctk.CTkLabel):
 
         self.fileMenu = Menu(self, tearoff=0)
         self.fileMenu.add_command(label="Abrir", command=self.abrirArquivo)
-        self.fileMenu.add_command(label='Salvar')
+        self.fileMenu.add_command(label='Salvar', command=self.salvarArquivo)
         self.fileMenu.add_separator()
         self.fileMenu.add_command(label="Sair", command=container.quit)
 
@@ -78,15 +78,26 @@ class BotaoArquivo(ctk.CTkLabel):
         self.fileMenu.post(event.x_root, event.y_root)
 
     def abrirArquivo(self):
-        self.arquivo_selecionado = filedialog.askopenfilename(initialdir='Downloads',
-                                                              title='Selecionar arquivo',
-                                                              filetypes=(("json files", '*.json'),))
-        if self.arquivo_selecionado != '':
-            with open(self.arquivo_selecionado) as file_json:
+        path = filedialog.askopenfilename(initialdir='Downloads',
+                                          title='Selecionar arquivo',
+                                          filetypes=(("json files", '*.json'),))
+        if path:
+            with open(path, 'r') as file_json:
                 self.meu_canvas.lista_primitivos.clear()
-                self.meu_canvas.lista_primitivos = JsonReader.read(file_json)
+                self.meu_canvas.lista_primitivos = JsonHandler.read(file_json)
                 self.meu_canvas.deletaTudo()
                 self.meu_canvas.redesenhar()
+
+    def salvarArquivo(self):
+        path = filedialog.asksaveasfilename(initialdir='Downloads',
+                                            title='Salvar arquivo',
+                                            filetypes=(("json files", '*.json'),))
+
+        if path:
+            if not path.endswith('.json'):
+                path += '.json'
+            JsonHandler.write(path, self.meu_canvas.lista_primitivos)
+
 
     def selecionado(self, event):
         self.configure(fg_color='#646464')
