@@ -2,6 +2,24 @@ from primitivos import *
 from tkinter import Label
 
 
+def normaliza(coordenada: dict) -> dict:
+    x = coordenada['x'] / 800
+    y = coordenada['y'] / 600
+
+    return {"x": x, "y": y}
+
+
+def converte(cor_rgb: str) -> dict:
+    dict_rgb = {}
+    cor_rgb = cor_rgb[1:]
+    cores = [cor_rgb[i:i + 2] for i in range(0, 5, 2)]
+
+    for cor, valor in zip(['r', 'g', 'b'], cores):
+        dict_rgb[cor] = int(valor, 16)
+
+    return dict_rgb
+
+
 class PontoGr(Ponto):
     _id = 0
 
@@ -51,6 +69,9 @@ class PontoGr(Ponto):
         else:
             if self.tag:
                 self.tag.place_forget()
+
+    def info(self) -> dict:
+        return {'id': self.id, 'esp': self.width, **normaliza({"x": self.x, "y": self.y}), 'cor': converte(self.cor)}
 
 
 class RetaGr(Reta):
@@ -157,9 +178,12 @@ class TrianguloGr(Triangulo):
         self.tag = None
 
     def desenhaTriangulo(self, canvas):
-        RetaGr(self.pontos[0], self.pontos[1], self.cor, self.width).desenhaReta(canvas)
-        RetaGr(self.pontos[1], self.pontos[2], self.cor, self.width).desenhaReta(canvas)
-        RetaGr(self.pontos[2], self.pontos[0], self.cor, self.width).desenhaReta(canvas)
+        # RetaGr(self.pontos[0], self.pontos[1], self.cor, self.width).desenhaReta(canvas)
+        # RetaGr(self.pontos[1], self.pontos[2], self.cor, self.width).desenhaReta(canvas)
+        # RetaGr(self.pontos[2], self.pontos[0], self.cor, self.width).desenhaReta(canvas)
+
+        for i, j in zip((0, 1, 2), (1, 2, 0)):
+            RetaGr(self.pontos[i], self.pontos[j], self.cor, self.width).desenhaReta(canvas)
 
     def apagar(self, canvas):
         for p in self.pontos:
@@ -221,6 +245,7 @@ class CirculoGr(Circulo):
 
 class Mandala:
     _id = 0
+    tipo = 'mandala'
 
     def __init__(self, centro, raio, corCirc, corRetas, width):
         self.centro = centro
