@@ -133,8 +133,8 @@ class AreaDeDesenho(Canvas):
 
     def desenhaMandala(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
-            raio = ponto - self.ponto_mouse_anterior
-            mand = Mandala(self.ponto_mouse_anterior, raio, self.mandala_cor1, self.mandala_cor2, self.espessura.get())
+            mand = Mandala(self.ponto_mouse_anterior, ponto, self.mandala_cor1,
+                           self.mandala_cor2, self.espessura.get())
             mand.desenhaMandala(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)

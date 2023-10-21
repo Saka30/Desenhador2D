@@ -54,12 +54,9 @@ class JsonHandler:
 
                     case 'mandala':
                         centro = ajustar_coordenadas(primitivo['p1'])
-                        p1 = Ponto(primitivo['p1']['x'], primitivo['p1']['y'])
-                        p2 = Ponto(primitivo['p2']['x'], primitivo['p2']['y'])
-                        raio = p1 - p2
-                        raio = ajustar_coordenadas({'x':raio, 'y':0})
+                        p2 = ajustar_coordenadas(primitivo['p2'])
 
-                        p = Mandala(centro=centro, raio=raio.x, corCirc=converte(primitivo['cor1']),
+                        p = Mandala(p1=centro, p2=p2, corCirc=converte(primitivo['cor1']),
                                     corRetas=converte(primitivo['cor2']), width=primitivo['esp'])
 
                 if p is not None:
