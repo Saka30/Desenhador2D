@@ -20,10 +20,10 @@ def ajustar_coordenadas(coordenadas: dict) -> Ponto:
     return Ponto(x, y)
 
 
-class JsonReader:
+class JsonHandler:
     @classmethod
-    def read(cls, path):
-        json_object = json.load(path)
+    def read(cls, file_json) -> LinkedList:
+        json_object = json.load(file_json)
         meu_desenho = json_object['desenho']
         p = None
         array_primitivos = LinkedList()
@@ -66,3 +66,21 @@ class JsonReader:
                     array_primitivos.append(p)
 
         return array_primitivos
+
+    @classmethod
+    def write(cls, path:str, ed:LinkedList):
+        desenho = {'desenho':{}}
+        meu_desenho = desenho['desenho']
+
+        for i in range(len(ed)):
+            primitivo = ed[i]
+            if primitivo.tipo not in meu_desenho.keys():
+                meu_desenho[primitivo.tipo] = []
+
+            meu_desenho[primitivo.tipo].append(primitivo.info())
+
+        json_object = json.dumps(desenho, indent=4)
+
+        with open(path, 'w') as json_file:
+            json_file.write(json_object)
+
