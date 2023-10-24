@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from json_utils import JsonHandler
+from primitivos import Ponto
+from primitivos.graficos import TrianguloGr
 from tkinter import Listbox, END, Canvas, Menu, filedialog
 
 
@@ -168,10 +170,10 @@ class EspessuraLabel(ctk.CTkLabel):
         self.place(x=x + 70, y=y)
 
 
-class MenuDeleta(ctk.CTkToplevel):
-    def __init__(self, container, meu_canvas):
+class MenuDePrimitivos(ctk.CTkToplevel):
+    def __init__(self, container, title, meu_canvas):
         super().__init__(container)
-        self.title("Excluir figuras")
+        self.title(title)
         self.geometry("400x200")
         self.resizable(False, False)
         self.meu_canvas = meu_canvas
@@ -185,12 +187,25 @@ class MenuDeleta(ctk.CTkToplevel):
         self.listaFiguras.pack()
 
         for i in range(len(self.listaPrimitivos)):
+            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, True)
+
+    def close_window(self):
+        for i in range(len(self.listaPrimitivos)):
+            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, False)
+
+        self.container.drawtools.mostrar_tags()
+        self.destroy()
+
+
+class MenuDeleta(MenuDePrimitivos):
+    def __init__(self, container, meu_canvas, title="Excluir Figuras"):
+        super().__init__(container, title, meu_canvas)
+        self.container = container
+
+        for i in range(len(self.listaPrimitivos)):
             self.listaFiguras.insert(END, self.listaPrimitivos[i].id)
 
         ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom')
-
-        for i in range(len(self.listaPrimitivos)):
-            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, True)
 
     def destroyPrimitivos(self):
 
@@ -202,9 +217,57 @@ class MenuDeleta(ctk.CTkToplevel):
             self.meu_canvas.deletaTudo()
             self.meu_canvas.redesenhar()
 
-    def close_window(self):
-        for i in range(len(self.listaPrimitivos)):
-            self.listaPrimitivos[i].exibe_tag(self.meu_canvas, False)
 
-        self.container.drawtools.mostrar_tags()
-        self.destroy()
+class MenuRot(MenuDePrimitivos):
+
+    def __init__(self, container, meu_canvas, title="Rotacionar figuras"):
+        super().__init__(container, title, meu_canvas)
+        self.geometry("400x250")
+        self.angulo = ctk.IntVar(value=0)
+        self.func_id = None
+        self.primitivo_selecionado = None
+
+        #componentes
+        ctk.CTkSlider(self, width=360, height=10, variable=self.angulo,
+                      from_=0, to=180, number_of_steps=180).place(x=20, y=170)
+        ctk.CTkLabel(self,text='Angulo:').place(x=160, y=180)
+        ctk.CTkLabel(self,textvariable=self.angulo).place(x=210, y=180)
+        ctk.CTkLabel(self,text='º').place(x=232, y = 180)
+
+        ctk.CTkButton(self, text='Rotacionar',command=self.aguarda_ponto, width=80).pack(side='bottom')
+
+        for i in range(len(self.listaPrimitivos)):
+            primitivo = self.listaPrimitivos[i]
+            if isinstance(primitivo, TrianguloGr):
+                self.listaFiguras.insert(END, primitivo.id)
+
+    def aguarda_ponto(self):
+        for index_selecionado in self.listaFiguras.curselection():
+            self.primitivo_selecionado = self.listaPrimitivos[index_selecionado]
+
+        self.withdraw()
+
+        if self.primitivo_selecionado:
+            self.meu_canvas.bind("<Button-1>", self.rotaciona)
+        else:
+            self.close_window()
+
+    def rotaciona(self, event):
+        self.primitivo_selecionado.rotaciona(self.angulo, Ponto(event.x, event.y))
+        self.close_window()
+
+
+    def close_window(self):
+        super().close_window()
+        self.meu_canvas.bind("<Button-1>", self.meu_canvas.desenhaPrimitivo)
+
+class MenuEscala(MenuDePrimitivos):
+    def __init__(self, container, meu_canvas, title="Escala em relação a um ponto"):
+        super().__init__(container, title, meu_canvas)
+
+        for i in range(len(self.listaPrimitivos)):
+            primitivo = self.listaPrimitivos[i]
+            if isinstance(primitivo, TrianguloGr):
+                self.listaFiguras.insert(END, primitivo.id)
+
+
