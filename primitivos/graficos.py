@@ -224,6 +224,10 @@ class TrianguloGr(Triangulo):
                 'p3':normaliza(self.pontos[2]),
                 'cor': converte(self.cor)}
 
+    def rotaciona(self, angulo, ponto):
+        print("rotacionou")
+        print(self.id, angulo.get(), ponto)
+
 
 class CirculoGr(Circulo):
     _id = 0
