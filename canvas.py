@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import Canvas, colorchooser, Menu
 from primitivos.graficos import *
 from linked_list import LinkedList
+from toolset import MenuRot, MenuEscala
 
 
 class AreaDeDesenho(Canvas):
@@ -23,6 +24,9 @@ class AreaDeDesenho(Canvas):
         self.tipo_primitivo = tipo_primitivo
         self.coordenadas_var = ctk.StringVar(value='')
         self.check_var = ctk.StringVar(value="off")
+        self.container = container
+        self.menuRotaciona = None
+        self.menuEscala = None
 
         # Armazenador de primitivos
         self.lista_primitivos = LinkedList()
@@ -30,6 +34,8 @@ class AreaDeDesenho(Canvas):
         # cria um menu de opçoes
         self.subMenu = Menu(self, tearoff=0)
         self.subMenu.add_command(label="Limpar memória", command=self.limpaMemoria)
+        self.subMenu.add_command(label="Rotacionar", command=self.callMenuRot)
+        self.subMenu.add_command(label="Escala", command=self.callMenuEscala)
         self.subMenu.add_separator()
         self.subMenu.add_command(label="Sair", command=container.quit)
 
@@ -51,6 +57,23 @@ class AreaDeDesenho(Canvas):
 
     def callSubMenu(self, event):
         self.subMenu.post(event.x_root, event.y_root)
+
+    def callMenuRot(self):
+        if self.menuRotaciona is None or not self.menuRotaciona.winfo_exists():
+            self.menuRotaciona = MenuRot(self.container, self)
+            self.menuRotaciona.attributes("-topmost", True)
+            self.menuRotaciona.protocol("WM_DELETE_WINDOW", self.menuRotaciona.close_window)
+        else:
+            self.menuRotaciona.focus()
+
+    def callMenuEscala(self):
+        if self.menuEscala is None or not self.menuEscala.winfo_exists():
+            self.menuEscala = MenuEscala(self.container, self)
+            self.menuEscala.attributes("-topmost", True)
+            self.menuEscala.protocol("WM_DELETE_WINDOW", self.menuEscala.close_window)
+        else:
+            self.menuEscala.focus()
+
 
     def desfaz(self, event):
         if not self.lista_primitivos.is_empty():
