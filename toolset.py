@@ -3,6 +3,7 @@ from json_utils import JsonHandler
 from primitivos import Ponto
 from primitivos.graficos import TrianguloGr
 from tkinter import Listbox, END, Canvas, Menu, filedialog
+import copy
 
 
 class DrawTools(ctk.CTkFrame):
@@ -74,9 +75,9 @@ class BotaoArquivo(ctk.CTkLabel):
 
         self.bind("<Enter>", self.selecionado)
         self.bind("<Leave>", self.desselecionado)
-        self.bind("<Button-1>", self.callMenuSalvar)
+        self.bind("<Button-1>", self.callMenu)
 
-    def callMenuSalvar(self, event):
+    def callMenu(self, event):
         self.fileMenu.post(event.x_root, event.y_root)
 
     def abrirArquivo(self):
@@ -229,7 +230,7 @@ class MenuRot(MenuDePrimitivos):
 
         #componentes
         ctk.CTkSlider(self, width=360, height=10, variable=self.angulo,
-                      from_=0, to=180, number_of_steps=180).place(x=20, y=170)
+                      from_=0, to=360, number_of_steps=360).place(x=20, y=170)
         ctk.CTkLabel(self,text='Angulo:').place(x=160, y=180)
         ctk.CTkLabel(self,textvariable=self.angulo).place(x=210, y=180)
         ctk.CTkLabel(self,text='º').place(x=232, y = 180)
@@ -253,8 +254,20 @@ class MenuRot(MenuDePrimitivos):
             self.close_window()
 
     def rotaciona(self, event):
-        self.primitivo_selecionado.rotaciona(self.angulo, Ponto(event.x, event.y))
-        self.close_window()
+
+       self.primitivo_selecionado.rotaciona(self.angulo, Ponto(event.x, event.y))
+       self.meu_canvas.redesenhar()
+
+       # trg = TrianguloGr(self.primitivo_selecionado.pontos, cor=self.primitivo_selecionado.cor,
+       #             width=self.primitivo_selecionado.width)
+       #
+       # for i in range(36):
+       #     novo_trg = trg.rotaciona(self.angulo, Ponto(event.x, event.y))
+       #     self.meu_canvas.lista_primitivos.append(novo_trg)
+       #
+       # self.meu_canvas.redesenhar()
+
+       self.close_window()
 
 
     def close_window(self):

@@ -1,5 +1,8 @@
+import copy
+
 from primitivos import *
 from tkinter import Label
+from math import sin, cos, radians
 
 
 def normaliza(coordenada: dict | Ponto) -> dict:
@@ -225,8 +228,19 @@ class TrianguloGr(Triangulo):
                 'cor': converte(self.cor)}
 
     def rotaciona(self, angulo, ponto):
-        print("rotacionou")
-        print(self.id, angulo.get(), ponto)
+
+        angulo = radians(angulo.get())
+
+        for i in range(3):
+            x, y = self.pontos[i].x, self.pontos[i].y
+            novo_x = x * cos(angulo) - y * sin(angulo) + ponto.x * (1 - cos(angulo)) + ponto.y * sin(angulo)
+            novo_y = x * sin(angulo) + y * cos(angulo) + ponto.y * (1 - cos(angulo)) - ponto.x * sin(angulo)
+            novo_x, novo_y = round(novo_x), round(novo_y)
+            self.pontos[i] = Ponto(novo_x, novo_y)
+
+        return copy.deepcopy(self)
+
+
 
 
 class CirculoGr(Circulo):
