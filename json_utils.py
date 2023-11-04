@@ -12,17 +12,12 @@ def converte(cor_rgb: dict) -> str:
     return string_rgb
 
 
-def ajustar_coordenadas(coordenadas: dict) -> Ponto:
-
-    x = round(coordenadas['x'] * 800)
-    y = round(coordenadas['y'] * 600)
-
-    return Ponto(x, y)
-
-
 class JsonHandler:
-    @classmethod
-    def read(cls, file_json) -> LinkedList:
+
+    def __init__(self, container):
+        self.container = container
+
+    def read(self, file_json) -> LinkedList:
         json_object = json.load(file_json)
         meu_desenho = json_object['desenho']
         p = None
@@ -32,40 +27,39 @@ class JsonHandler:
             for primitivo in meu_desenho[lista_primitivos]:
                 match lista_primitivos:
                     case 'ponto':
-                        coordenada = ajustar_coordenadas(primitivo)
+                        coordenada = self.ajustar_coordenadas(primitivo)
                         p = PontoGr(x=coordenada.x, y=coordenada.y, cor=converte(primitivo['cor']),
-                                    width=primitivo['esp'])
+                                    width=round(primitivo['esp']/3))
                     case 'reta':
-                        coordenadas = (ajustar_coordenadas(primitivo['p1']), ajustar_coordenadas(primitivo['p2']))
+                        coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetaGr(p1=coordenadas[0],p2=coordenadas[1],
-                                   cor=converte(primitivo['cor']), width=primitivo['esp'])
+                                   cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
                     case 'triangulo':
-                        coordenadas = [ajustar_coordenadas(primitivo[pt]) for pt in ['p1','p2','p3']]
-                        p = TrianguloGr(coordenadas,cor=converte(primitivo['cor']), width=primitivo['esp'])
+                        coordenadas = [self.ajustar_coordenadas(primitivo[pt]) for pt in ['p1','p2','p3']]
+                        p = TrianguloGr(coordenadas,cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
                     case 'retangulo':
-                        coordenadas = (ajustar_coordenadas(primitivo['p1']), ajustar_coordenadas(primitivo['p2']))
+                        coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetanguloGr(p1=coordenadas[0], p2=coordenadas[1],
-                                        cor=converte(primitivo['cor']), width=primitivo['esp'])
+                                        cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
                     case 'circulo':
-                        centro = ajustar_coordenadas(primitivo['centro'])
-                        raio = ajustar_coordenadas({'x':primitivo['raio'], 'y':0})
+                        centro = self.ajustar_coordenadas(primitivo['centro'])
+                        raio = self.ajustar_coordenadas({'x':primitivo['raio'], 'y':0})
                         p = CirculoGr(centro=centro, raio=raio.x, cor=converte(primitivo['cor']),
-                                      width=primitivo['esp'])
+                                      width=round(primitivo['esp']/3))
 
                     case 'mandala':
-                        centro = ajustar_coordenadas(primitivo['p1'])
-                        p2 = ajustar_coordenadas(primitivo['p2'])
+                        centro = self.ajustar_coordenadas(primitivo['p1'])
+                        p2 = self.ajustar_coordenadas(primitivo['p2'])
 
                         p = Mandala(p1=centro, p2=p2, corCirc=converte(primitivo['cor1']),
-                                    corRetas=converte(primitivo['cor2']), width=primitivo['esp'])
+                                    corRetas=converte(primitivo['cor2']), width=round(primitivo['esp']/3))
 
                 if p is not None:
                     array_primitivos.append(p)
 
         return array_primitivos
 
-    @classmethod
-    def write(cls, path:str, ed:LinkedList):
+    def write(self, path:str, ed:LinkedList):
         desenho = {'desenho':{}}
         meu_desenho = desenho['desenho']
 
@@ -74,10 +68,17 @@ class JsonHandler:
             if primitivo.tipo not in meu_desenho.keys():
                 meu_desenho[primitivo.tipo] = []
 
-            meu_desenho[primitivo.tipo].append(primitivo.info())
+            meu_desenho[primitivo.tipo].append(primitivo.info(self.container))
 
         json_object = json.dumps(desenho, indent=4)
 
         with open(path, 'w') as json_file:
             json_file.write(json_object)
+
+    def ajustar_coordenadas(self,coordenadas: dict) -> Ponto:
+
+        x = round(coordenadas['x'] * self.container.largura)
+        y = round(coordenadas['y'] * self.container.altura)
+
+        return Ponto(x, y)
 
