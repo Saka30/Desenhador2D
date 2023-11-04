@@ -5,12 +5,17 @@ import os
 
 
 class AppDesenho(ctk.CTk):
-    def __init__(self, largura, altura):
+    def __init__(self):
         super().__init__()
         ctk.set_appearance_mode('dark')
         ctk.set_default_color_theme('green')
         self.title('Sem título - Desenhador 2D')
-        self.geometry(f'{largura}x{altura}')
+
+        self.largura = round(self.winfo_screenwidth() * 0.75)
+        self.altura = round(self.winfo_screenheight() * 0.75)
+
+        self.geometry(f'{self.largura}x{self.altura}')
+
         self.resizable(False, False)
         self.pack_propagate(False)
 
@@ -33,5 +38,5 @@ class AppDesenho(ctk.CTk):
 
 
 if __name__ == '__main__':
-    app = AppDesenho(800, 600)
+    app = AppDesenho()
     app.mainloop()

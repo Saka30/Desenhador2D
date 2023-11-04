@@ -42,7 +42,8 @@ class AreaDeDesenho(Canvas):
         self.coordenadas = ctk.CTkLabel(self,
                                         text_color='black',
                                         textvariable=self.coordenadas_var,
-                                        font=ctk.CTkFont(family='Consolas', size=14)).place(x=590, y=575)
+                                        font=ctk.CTkFont(family='Consolas', size=14)
+                                        ).place(x=container.largura * 0.8, y=container.altura*0.95)
 
         # start_point
         self.ponto_mouse_anterior = Ponto(x=None, y=None)
