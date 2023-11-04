@@ -1,16 +1,14 @@
-import copy
-
 from primitivos import *
 from tkinter import Label
 from math import sin, cos, radians
 
 
-def normaliza(coordenada: dict | Ponto) -> dict:
-    x = coordenada['x'] / 800
-    y = coordenada['y'] / 600
+def normaliza(coordenada: dict | Ponto, container) -> dict:
+
+    x = coordenada['x'] / container.largura
+    y = coordenada['y'] / container.altura
 
     return {"x": x, "y": y}
-
 
 def converte(cor_rgb: str) -> dict:
     dict_rgb = {}
@@ -73,9 +71,9 @@ class PontoGr(Ponto):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id': self.id, 'esp': self.width,
-                **normaliza({"x": self.x, "y": self.y}),
+    def info(self, container) -> dict:
+        return {'id': self.id, 'esp': self.width*3,
+                **normaliza({"x": self.x, "y": self.y}, container),
                 'cor': converte(self.cor)}
 
 
@@ -129,10 +127,10 @@ class RetaGr(Reta):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id':self.id, 'esp':self.width,
-                'p1':normaliza(self.p1),
-                'p2':normaliza(self.p2),
+    def info(self,container) -> dict:
+        return {'id':self.id, 'esp':self.width*3,
+                'p1':normaliza(self.p1,container),
+                'p2':normaliza(self.p2,container),
                 'cor': converte(self.cor)}
 
 
@@ -174,10 +172,10 @@ class RetanguloGr(Retangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id':self.id, 'esp':self.width,
-                'p1':normaliza(self.p1),
-                'p2':normaliza(self.p2),
+    def info(self,container) -> dict:
+        return {'id':self.id, 'esp':self.width*3,
+                'p1':normaliza(self.p1,container),
+                'p2':normaliza(self.p2,container),
                 'cor': converte(self.cor)}
 
 
@@ -220,11 +218,11 @@ class TrianguloGr(Triangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id':self.id, 'esp':self.width,
-                'p1':normaliza(self.pontos[0]),
-                'p2':normaliza(self.pontos[1]),
-                'p3':normaliza(self.pontos[2]),
+    def info(self,container) -> dict:
+        return {'id':self.id, 'esp':self.width*3,
+                'p1':normaliza(self.pontos[0],container),
+                'p2':normaliza(self.pontos[1],container),
+                'p3':normaliza(self.pontos[2],container),
                 'cor': converte(self.cor)}
 
     def rotaciona(self, angulo, ponto):
@@ -238,10 +236,17 @@ class TrianguloGr(Triangulo):
             novo_x, novo_y = round(novo_x), round(novo_y)
             self.pontos[i] = Ponto(novo_x, novo_y)
 
-        return copy.deepcopy(self)
+    def escala(self, sx, sy, ponto):
 
+        sx, sy = float(sx.get()), float(sy.get())
 
-
+        for i in range(3):
+            x, y = self.pontos[i].x, self.pontos[i].y
+            novo_x = sx * x + ponto.x * (1 - sx)
+            novo_y = sy * y + ponto.y * (1 - sy)
+            novo_x, novo_y = round(novo_x), round(novo_y)
+            self.pontos[i] = Ponto(novo_x, novo_y)
+        
 
 class CirculoGr(Circulo):
     _id = 0
@@ -281,10 +286,10 @@ class CirculoGr(Circulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id':self.id, 'esp':self.width,
-                'centro':normaliza(self.centro),
-                'raio':normaliza({'x':self.raio, 'y':0})['x'],
+    def info(self,container) -> dict:
+        return {'id':self.id, 'esp':self.width*3,
+                'centro':normaliza(self.centro,container),
+                'raio':self.raio / container.largura,
                 'cor': converte(self.cor)}
 
 
@@ -446,9 +451,10 @@ class Mandala:
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self) -> dict:
-        return {'id':self.id, 'esp':self.width,
-                'p1':normaliza(self.centro),
-                'p2':normaliza(self.p2),
+    def info(self,container) -> dict:
+        return {'id':self.id, 'esp':self.width*3,
+                'p1':normaliza(self.centro,container),
+                'p2':normaliza(self.p2,container),
                 'cor1': converte(self.corCirc),
                 'cor2':converte(self.corRetas)}
+
