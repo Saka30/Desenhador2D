@@ -12,8 +12,13 @@ class AreaDeDesenho(Canvas):
                          bg='white',
                          highlightthickness=0)
 
-        self.pack(side='right', fill='both', expand=True)
+        self.pack(side='right', fill='both', expand='True')
         self.configure(cursor='tcross')
+
+        self.update()
+        self.largura, self.altura = self.winfo_width(), self.winfo_height()
+
+        print(self.largura, self.altura)
 
         # dados
         self.pontosTriangulo = []
@@ -43,7 +48,7 @@ class AreaDeDesenho(Canvas):
                                         text_color='black',
                                         textvariable=self.coordenadas_var,
                                         font=ctk.CTkFont(family='Consolas', size=14)
-                                        ).place(x=container.largura * 0.8, y=container.altura*0.95)
+                                        ).place(x=self.largura * 0.8, y=self.altura*0.95)
 
         # start_point
         self.ponto_mouse_anterior = Ponto(x=None, y=None)
@@ -52,6 +57,7 @@ class AreaDeDesenho(Canvas):
         self.bind("<Button-1>", self.desenhaPrimitivo)
         self.bind("<Button-3>", self.callSubMenu)
         self.bind("<Motion>", self.changeCoordinates)
+
 
     def changeCoordinates(self, event):
         self.coordenadas_var.set(value=f'{event.x}, {event.y}px')

@@ -23,14 +23,13 @@ class DrawTools(ctk.CTkFrame):
         ControleDeEspessura(self, self.espessura)
         EspessuraLabel(self, self.espessura)
         self.bc1 = BotaoCor(self, meu_canvas.cor, "cor")
-        print(container.altura)
-        self.bc1.place(x=round(4.4/100 * container.largura), y=round(18/100 * container.altura))
+        self.bc1.place(x=round(4.4 / 100 * container.largura), y=round(18 / 100 * container.altura))
         self.bc2 = BotaoCor(self, meu_canvas.mandala_cor2, "mandala_cor2")
-        ctk.CTkLabel(self,text='Escolher Cor'
-                     ).place(x=round(2.5/100 * container.largura), y=round(0.24 * container.altura))
+        ctk.CTkLabel(self, text='Escolher Cor'
+                     ).place(x=round(2.5 / 100 * container.largura), y=round(0.24 * container.altura))
         ctk.CTkCheckBox(self, text='Mostrar tags', command=self.mostrar_tags,
                         variable=self.check_var, onvalue="on", offvalue="off"
-                        ).place(x=round(1/100 * container.largura), y=round(0.75 * container.altura))
+                        ).place(x=round(1 / 100 * container.largura), y=round(0.75 * container.altura))
         BotaoRedesenhar(self, self.meu_canvas)
         BotaoExclui(self, self.meu_canvas)
 
@@ -44,24 +43,25 @@ class DrawTools(ctk.CTkFrame):
 
     def modo_mandala(self, option):
         if option == "mandala":
-            self.bc1.place(x=round(1.5/100 * self.container.largura),
-                           y=round(18/100 * self.container.altura))
-            self.bc2.place(x=round(7/100 * self.container.largura),
-                           y=round(18/100 * self.container.altura))
+            self.bc1.place(x=round(1.5 / 100 * self.container.largura),
+                           y=round(18 / 100 * self.container.altura))
+            self.bc2.place(x=round(7 / 100 * self.container.largura),
+                           y=round(18 / 100 * self.container.altura))
             self.bc1.nome_atributo = "mandala_cor1"
-            self.bc1.configure(bg = self.meu_canvas.mandala_cor1)
+            self.bc1.configure(bg=self.meu_canvas.mandala_cor1)
         else:
             self.bc2.place_forget()
-            self.bc1.place(x=round(4.4/100 * self.container.largura),
-                           y=round(18/100 * self.container.altura))
+            self.bc1.place(x=round(4.4 / 100 * self.container.largura),
+                           y=round(18 / 100 * self.container.altura))
             self.bc1.nome_atributo = "cor"
-            self.bc1.configure(bg = self.meu_canvas.cor)
+            self.bc1.configure(bg=self.meu_canvas.cor)
 
     def mostrar_tags(self):
         flag = True if self.check_var.get() == "on" else False
         primitivos = self.meu_canvas.lista_primitivos
         for i in range(len(primitivos)):
             primitivos[i].exibe_tag(self.meu_canvas, flag)
+
 
 class BotaoArquivo(ctk.CTkLabel):
     def __init__(self, container):
@@ -93,7 +93,7 @@ class BotaoArquivo(ctk.CTkLabel):
         if path:
             with open(path, 'r') as file_json:
                 self.meu_canvas.lista_primitivos.clear()
-                jsonHandler = JsonHandler(self.container)
+                jsonHandler = JsonHandler(self.meu_canvas)
                 self.meu_canvas.lista_primitivos = jsonHandler.read(file_json)
                 self.meu_canvas.deletaTudo()
                 self.meu_canvas.redesenhar()
@@ -106,9 +106,8 @@ class BotaoArquivo(ctk.CTkLabel):
         if path:
             if not path.endswith('.json'):
                 path += '.json'
-            jsonHandler = JsonHandler(self.container)
+            jsonHandler = JsonHandler(self.meu_canvas)
             jsonHandler.write(path, self.meu_canvas.lista_primitivos)
-
 
     def selecionado(self, event):
         self.configure(fg_color='#646464')
@@ -126,7 +125,7 @@ class BotaoTipoDePrimitivo(ctk.CTkOptionMenu):
                          command=comando)
         self.app = container.container
 
-        self.place(x=round((0.2/100)*self.app.largura), y=round((9/100)*self.app.altura))
+        self.place(x=round((0.2 / 100) * self.app.largura), y=round((9 / 100) * self.app.altura))
         self.set('Figura')
 
 
@@ -135,7 +134,7 @@ class BotaoExclui(ctk.CTkButton):
         super().__init__(container, text=texto, command=container.callMenuDeleta, width=80)
         self.app = container.container
 
-        self.place(x=round((1.5/100) * self.app.largura), y=round(0.93 * self.app.altura))
+        self.place(x=round((1.5 / 100) * self.app.largura), y=round(0.93 * self.app.altura))
 
 
 class BotaoRedesenhar(ctk.CTkButton):
@@ -143,7 +142,7 @@ class BotaoRedesenhar(ctk.CTkButton):
         super().__init__(container, text=texto, command=meu_canvas.redesenhar, width=80)
         self.app = container.container
 
-        self.place(x=round((1.5/100) * self.app.largura), y=round(0.85 * self.app.altura))
+        self.place(x=round((1.5 / 100) * self.app.largura), y=round(0.85 * self.app.altura))
 
 
 class BotaoCor(Canvas):
@@ -151,8 +150,11 @@ class BotaoCor(Canvas):
         self.cor = cor
         self.nome_atributo = nome_atributo
         self.meu_canvas = container.meu_canvas
-        super().__init__(container, height=20, width=20, relief='sunken',
-                         bd=2, bg = self.cor,  highlightbackground='gray')
+        self.app = container.container
+
+        super().__init__(container, height=round(2 / 100 * self.app.largura),
+                         width=round(3.5 / 100 * self.app.altura), relief='sunken',
+                         bd=2, bg=self.cor, highlightbackground='gray')
 
         self.bind("<Button-1>", lambda event: self.altera_cor(self.nome_atributo))
 
@@ -171,14 +173,14 @@ class ControleDeEspessura(ctk.CTkSlider):
                          orientation='vertical')
         self.app = container.container
 
-        self.place(x=round((4.7/100) * self.app.largura), y=round(0.3 * self.app.altura))
+        self.place(x=round((4.7 / 100) * self.app.largura), y=round(0.3 * self.app.altura))
 
 
 class EspessuraLabel(ctk.CTkLabel):
     def __init__(self, container, espessura):
         super().__init__(container, textvariable=espessura, text_color='white')
         self.app = container.container
-        x, y = round((1.75/100) * self.app.largura), round(0.66 * self.app.altura)
+        x, y = round((1.75 / 100) * self.app.largura), round(0.66 * self.app.altura)
 
         ctk.CTkLabel(container, text='Espessura: ').place(x=x, y=y)
         self.place(x=x + 70, y=y)
@@ -187,12 +189,14 @@ class EspessuraLabel(ctk.CTkLabel):
 class MenuDePrimitivos(ctk.CTkToplevel):
     def __init__(self, container, title, meu_canvas):
         super().__init__(container)
+        self.primitivo_selecionado = None
         self.title(title)
         self.geometry("400x200")
         self.resizable(False, False)
         self.meu_canvas = meu_canvas
         self.listaPrimitivos = meu_canvas.lista_primitivos
         self.container = container
+        self.warning = None
 
         ctk.CTkLabel(self, text='Figuras', text_color='white', font=("Arial", 14)).pack()
 
@@ -210,7 +214,25 @@ class MenuDePrimitivos(ctk.CTkToplevel):
         self.container.drawtools.mostrar_tags()
         self.destroy()
 
+        if self.warning:
+            self.warning.place_forget()
+
         self.meu_canvas.bind("<Button-1>", self.meu_canvas.desenhaPrimitivo)
+
+    def aguarda_ponto(self):
+        for index_selecionado in self.listaFiguras.curselection():
+            while (not isinstance(self.listaPrimitivos[index_selecionado], TrianguloGr) and
+                   index_selecionado < len(self.listaPrimitivos)):
+                index_selecionado += 1
+
+            self.primitivo_selecionado = self.listaPrimitivos[index_selecionado]
+
+        self.withdraw()
+
+        self.warning = ctk.CTkLabel(self.meu_canvas, text="Aguardando ponto...",
+                                    font=ctk.CTkFont(family='Arial', size=14, weight='bold'),
+                                    text_color='red')
+        self.warning.place(x=5, y=self.meu_canvas.altura * 0.95)
 
 
 class MenuDeleta(MenuDePrimitivos):
@@ -241,16 +263,15 @@ class MenuRot(MenuDePrimitivos):
         self.geometry("400x250")
         self.angulo = ctk.IntVar(value=0)
         self.func_id = None
-        self.primitivo_selecionado = None
 
-        #componentes
+        # componentes
         ctk.CTkSlider(self, width=360, height=10, variable=self.angulo,
                       from_=0, to=360, number_of_steps=360).place(x=20, y=170)
-        ctk.CTkLabel(self,text='Angulo:').place(x=160, y=180)
-        ctk.CTkLabel(self,textvariable=self.angulo).place(x=210, y=180)
-        ctk.CTkLabel(self,text='º').place(x=232, y = 180)
+        ctk.CTkLabel(self, text='Angulo:').place(x=160, y=180)
+        ctk.CTkLabel(self, textvariable=self.angulo).place(x=210, y=180)
+        ctk.CTkLabel(self, text='º').place(x=232, y=180)
 
-        ctk.CTkButton(self, text='Rotacionar',command=self.aguarda_ponto, width=80).pack(side='bottom')
+        ctk.CTkButton(self, text='Rotacionar', command=self.aguarda_ponto, width=80).pack(side='bottom')
 
         for i in range(len(self.listaPrimitivos)):
             primitivo = self.listaPrimitivos[i]
@@ -258,10 +279,7 @@ class MenuRot(MenuDePrimitivos):
                 self.listaFiguras.insert(END, primitivo.id)
 
     def aguarda_ponto(self):
-        for index_selecionado in self.listaFiguras.curselection():
-            self.primitivo_selecionado = self.listaPrimitivos[index_selecionado]
-
-        self.withdraw()
+        super().aguarda_ponto()
 
         if self.primitivo_selecionado:
             self.meu_canvas.bind("<Button-1>", self.rotaciona)
@@ -275,23 +293,23 @@ class MenuRot(MenuDePrimitivos):
 
         # trg = TrianguloGr(self.primitivo_selecionado.pontos, cor=self.primitivo_selecionado.cor,
         #             width=self.primitivo_selecionado.width)
-        
+
         # for i in range(35):
         #     novo_trg = trg.rotaciona(self.angulo, Ponto(event.x, event.y))
         #     novo_trg.cor = choice(["#ff0000","#00ff00",'#0000ff', "#ffff00", "#8A2BE2", "#7FFFD4", 
         #     '#FF1493', '#FF7F50', '#E0FFFF', '#D2691E'])
         #     self.meu_canvas.lista_primitivos.append(novo_trg)
-        
+
         self.meu_canvas.redesenhar()
 
         self.close_window()
+
 
 class MenuEscala(MenuDePrimitivos):
     def __init__(self, container, meu_canvas, title="Escala em relação a um ponto"):
         super().__init__(container, title, meu_canvas)
         self.geometry("400x250")
 
-        self.primitivo_selecionado = None
         self.sx = ctk.StringVar()
         self.sy = ctk.StringVar()
 
@@ -300,28 +318,22 @@ class MenuEscala(MenuDePrimitivos):
             if isinstance(primitivo, TrianguloGr):
                 self.listaFiguras.insert(END, primitivo.id)
 
+        ctk.CTkEntry(self, textvariable=self.sx).place(x=50, y=170)
+        ctk.CTkEntry(self, placeholder_text="Sy: ", textvariable=self.sy).place(x=200, y=170)
 
-        ctk.CTkEntry(self, textvariable=self.sx).place(x=50, y = 170)
-        ctk.CTkEntry(self,placeholder_text="Sy: ", textvariable=self.sy).place(x=200, y = 170)
-
-        ctk.CTkButton(self, text='Escalar',command=self.aguarda_ponto, width=80).pack(side='bottom')
+        ctk.CTkButton(self, text='Escalar', command=self.aguarda_ponto, width=80).pack(side='bottom')
 
     def aguarda_ponto(self):
-        for index_selecionado in self.listaFiguras.curselection():
-            self.primitivo_selecionado = self.listaPrimitivos[index_selecionado]
-
-        self.withdraw()
+        super().aguarda_ponto()
 
         if self.primitivo_selecionado:
             self.meu_canvas.bind("<Button-1>", self.escala)
-
         else:
             self.close_window()
 
     def escala(self, event):
-        self.primitivo_selecionado.escala(self.sx, self.sy, Ponto(event.x,event.y))
+        self.primitivo_selecionado.escala(self.sx, self.sy, Ponto(event.x, event.y))
         self.meu_canvas.deletaTudo()
         self.meu_canvas.redesenhar()
 
         self.close_window()
-

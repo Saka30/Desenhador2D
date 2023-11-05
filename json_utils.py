@@ -14,8 +14,8 @@ def converte(cor_rgb: dict) -> str:
 
 class JsonHandler:
 
-    def __init__(self, container):
-        self.container = container
+    def __init__(self, canvas):
+        self.canvas = canvas
 
     def read(self, file_json) -> LinkedList:
         json_object = json.load(file_json)
@@ -29,30 +29,30 @@ class JsonHandler:
                     case 'ponto':
                         coordenada = self.ajustar_coordenadas(primitivo)
                         p = PontoGr(x=coordenada.x, y=coordenada.y, cor=converte(primitivo['cor']),
-                                    width=round(primitivo['esp']/3))
+                                    width=round(primitivo['esp']/100 * 30))
                     case 'reta':
                         coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetaGr(p1=coordenadas[0],p2=coordenadas[1],
-                                   cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
+                                   cor=converte(primitivo['cor']), width=round(primitivo['esp']/100 * 30))
                     case 'triangulo':
                         coordenadas = [self.ajustar_coordenadas(primitivo[pt]) for pt in ['p1','p2','p3']]
-                        p = TrianguloGr(coordenadas,cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
+                        p = TrianguloGr(coordenadas,cor=converte(primitivo['cor']), width=round(primitivo['esp']/100 * 30))
                     case 'retangulo':
                         coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetanguloGr(p1=coordenadas[0], p2=coordenadas[1],
-                                        cor=converte(primitivo['cor']), width=round(primitivo['esp']/3))
+                                        cor=converte(primitivo['cor']), width=round(primitivo['esp']/100 * 30))
                     case 'circulo':
                         centro = self.ajustar_coordenadas(primitivo['centro'])
-                        raio = self.ajustar_coordenadas({'x':primitivo['raio'], 'y':0})
-                        p = CirculoGr(centro=centro, raio=raio.x, cor=converte(primitivo['cor']),
-                                      width=round(primitivo['esp']/3))
+                        raio = primitivo['raio'] * self.canvas.largura
+                        p = CirculoGr(centro=centro, raio=raio, cor=converte(primitivo['cor']),
+                                      width=round(primitivo['esp']/100 * 30))
 
                     case 'mandala':
                         centro = self.ajustar_coordenadas(primitivo['p1'])
                         p2 = self.ajustar_coordenadas(primitivo['p2'])
 
                         p = Mandala(p1=centro, p2=p2, corCirc=converte(primitivo['cor1']),
-                                    corRetas=converte(primitivo['cor2']), width=round(primitivo['esp']/3))
+                                    corRetas=converte(primitivo['cor2']), width=round(primitivo['esp']/100 * 30))
 
                 if p is not None:
                     array_primitivos.append(p)
@@ -68,7 +68,7 @@ class JsonHandler:
             if primitivo.tipo not in meu_desenho.keys():
                 meu_desenho[primitivo.tipo] = []
 
-            meu_desenho[primitivo.tipo].append(primitivo.info(self.container))
+            meu_desenho[primitivo.tipo].append(primitivo.info(self.canvas))
 
         json_object = json.dumps(desenho, indent=4)
 
@@ -77,8 +77,8 @@ class JsonHandler:
 
     def ajustar_coordenadas(self,coordenadas: dict) -> Ponto:
 
-        x = round(coordenadas['x'] * self.container.largura)
-        y = round(coordenadas['y'] * self.container.altura)
+        x = round(coordenadas['x'] * self.canvas.largura)
+        y = round(coordenadas['y'] * self.canvas.altura)
 
         return Ponto(x, y)
 

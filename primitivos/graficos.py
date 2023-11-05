@@ -3,10 +3,10 @@ from tkinter import Label
 from math import sin, cos, radians
 
 
-def normaliza(coordenada: dict | Ponto, container) -> dict:
+def normaliza(coordenada: dict | Ponto, canvas) -> dict:
 
-    x = coordenada['x'] / container.largura
-    y = coordenada['y'] / container.altura
+    x = coordenada['x'] / canvas.largura
+    y = coordenada['y'] / canvas.altura
 
     return {"x": x, "y": y}
 
@@ -71,9 +71,9 @@ class PontoGr(Ponto):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self, container) -> dict:
-        return {'id': self.id, 'esp': self.width*3,
-                **normaliza({"x": self.x, "y": self.y}, container),
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width/30 * 100),
+                **normaliza({"x": self.x, "y": self.y}, canvas),
                 'cor': converte(self.cor)}
 
 
@@ -127,10 +127,10 @@ class RetaGr(Reta):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,container) -> dict:
-        return {'id':self.id, 'esp':self.width*3,
-                'p1':normaliza(self.p1,container),
-                'p2':normaliza(self.p2,container),
+    def info(self,canvas) -> dict:
+        return {'id':self.id, 'esp':round(self.width/30 * 100),
+                'p1':normaliza(self.p1,canvas),
+                'p2':normaliza(self.p2,canvas),
                 'cor': converte(self.cor)}
 
 
@@ -172,10 +172,10 @@ class RetanguloGr(Retangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,container) -> dict:
-        return {'id':self.id, 'esp':self.width*3,
-                'p1':normaliza(self.p1,container),
-                'p2':normaliza(self.p2,container),
+    def info(self,canvas) -> dict:
+        return {'id':self.id, 'esp':round(self.width/30 * 100),
+                'p1':normaliza(self.p1,canvas),
+                'p2':normaliza(self.p2,canvas),
                 'cor': converte(self.cor)}
 
 
@@ -218,11 +218,11 @@ class TrianguloGr(Triangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,container) -> dict:
-        return {'id':self.id, 'esp':self.width*3,
-                'p1':normaliza(self.pontos[0],container),
-                'p2':normaliza(self.pontos[1],container),
-                'p3':normaliza(self.pontos[2],container),
+    def info(self,canvas) -> dict:
+        return {'id':self.id, 'esp':round(self.width/30 * 100),
+                'p1':normaliza(self.pontos[0],canvas),
+                'p2':normaliza(self.pontos[1],canvas),
+                'p3':normaliza(self.pontos[2],canvas),
                 'cor': converte(self.cor)}
 
     def rotaciona(self, angulo, ponto):
@@ -286,10 +286,10 @@ class CirculoGr(Circulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,container) -> dict:
-        return {'id':self.id, 'esp':self.width*3,
-                'centro':normaliza(self.centro,container),
-                'raio':self.raio / container.largura,
+    def info(self,canvas) -> dict:
+        return {'id':self.id, 'esp':round(self.width/30 * 100),
+                'centro':normaliza(self.centro,canvas),
+                'raio':self.raio / canvas.largura,
                 'cor': converte(self.cor)}
 
 
@@ -451,10 +451,10 @@ class Mandala:
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,container) -> dict:
-        return {'id':self.id, 'esp':self.width*3,
-                'p1':normaliza(self.centro,container),
-                'p2':normaliza(self.p2,container),
+    def info(self,canvas) -> dict:
+        return {'id':self.id, 'esp':round(self.width/30 * 100),
+                'p1':normaliza(self.centro,canvas),
+                'p2':normaliza(self.p2,canvas),
                 'cor1': converte(self.corCirc),
                 'cor2':converte(self.corRetas)}
 
