@@ -92,6 +92,7 @@ class BotaoArquivo(ctk.CTkLabel):
                                           filetypes=(("json files", '*.json'),))
         if path:
             with open(path, 'r') as file_json:
+                self.container.title(path.split("/")[-1].replace(".json", ""))
                 self.meu_canvas.lista_primitivos.clear()
                 jsonHandler = JsonHandler(self.meu_canvas)
                 self.meu_canvas.lista_primitivos = jsonHandler.read(file_json)
@@ -108,6 +109,7 @@ class BotaoArquivo(ctk.CTkLabel):
                 path += '.json'
             jsonHandler = JsonHandler(self.meu_canvas)
             jsonHandler.write(path, self.meu_canvas.lista_primitivos)
+            self.container.title(path.split("/")[-1].replace(".json", ""))
 
     def selecionado(self, event):
         self.configure(fg_color='#646464')
