@@ -12,13 +12,11 @@ class AreaDeDesenho(Canvas):
                          bg='white',
                          highlightthickness=0)
 
-        self.pack(side='right', fill='both', expand='True')
+        self.pack(side='right', fill='both', expand=True)
         self.configure(cursor='tcross')
 
         self.update()
         self.largura, self.altura = self.winfo_width(), self.winfo_height()
-
-        print(self.largura, self.altura)
 
         # dados
         self.pontosTriangulo = []
@@ -38,7 +36,7 @@ class AreaDeDesenho(Canvas):
 
         # cria um menu de opçoes
         self.subMenu = Menu(self, tearoff=0)
-        self.subMenu.add_command(label="Limpar memória", command=self.limpaMemoria)
+        self.subMenu.add_command(label="Limpa tudo", command=self.limpaTudo)
         self.subMenu.add_command(label="Rotacionar", command=self.callMenuRot)
         self.subMenu.add_command(label="Escala", command=self.callMenuEscala)
         self.subMenu.add_separator()
@@ -122,7 +120,6 @@ class AreaDeDesenho(Canvas):
         return p
 
     def desenhaReta(self, ponto1, ponto2):
-
         if ponto1 != Ponto(None, None):
             reta = RetaGr(ponto1, ponto2, self.cor, self.espessura.get())
             reta.desenhaReta(self)
@@ -192,8 +189,9 @@ class AreaDeDesenho(Canvas):
                 case Mandala():
                     primitivo.desenhaMandala(self)
 
-    def limpaMemoria(self):
+    def limpaTudo(self):
         self.lista_primitivos.clear()
+        self.deletaTudo()
 
     def deletaTudo(self, event=None):
         self.delete('all')
