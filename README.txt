@@ -1,4 +1,1 @@
-É necessário instalar a biblioteca customtkinter.
-
-No terminal:
- - pip install customtkinter
+Projeto da disciplina de Computação Gráfica - PUC SP 4° semestre.
