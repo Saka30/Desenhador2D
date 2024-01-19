@@ -31,8 +31,7 @@ class JsonHandler:
                         p = PontoGr(x=coordenada.x, y=coordenada.y, cor=converte(primitivo['cor']),
                                     width=round(primitivo['esp'] / 100 * 30))
                     case 'reta':
-                        coordenadas = (
-                        self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
+                        coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetaGr(p1=coordenadas[0], p2=coordenadas[1],
                                    cor=converte(primitivo['cor']), width=round(primitivo['esp'] / 100 * 30))
                     case 'triangulo':
@@ -40,8 +39,7 @@ class JsonHandler:
                         p = TrianguloGr(coordenadas, cor=converte(primitivo['cor']),
                                         width=round(primitivo['esp'] / 100 * 30))
                     case 'retangulo':
-                        coordenadas = (
-                        self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
+                        coordenadas = (self.ajustar_coordenadas(primitivo['p1']), self.ajustar_coordenadas(primitivo['p2']))
                         p = RetanguloGr(p1=coordenadas[0], p2=coordenadas[1],
                                         cor=converte(primitivo['cor']), width=round(primitivo['esp'] / 100 * 30))
                     case 'circulo':
