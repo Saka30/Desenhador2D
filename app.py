@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from canvas import AreaDeDesenho
 from toolset import DrawTools
-import os
+from pathlib import Path
 
 
 class AppDesenho(ctk.CTk):
@@ -19,10 +19,7 @@ class AppDesenho(ctk.CTk):
         self.resizable(False, False)
         self.pack_propagate(False)
 
-        # configura o diretorio do icone indepedente da IDE
-        self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.icon_path = os.path.join(self.script_dir, "paint-pallete.ico")
-        self.iconbitmap(self.icon_path)
+        self.iconbitmap(Path(__file__).parent / "paint-pallete.ico")
 
         # dados
         self.espessura = ctk.IntVar(value=1)
@@ -36,7 +33,9 @@ class AppDesenho(ctk.CTk):
         self.bind("<Control-z>", self.canvas.desfaz)
         self.bind("<Control-l>", self.canvas.limpaTudo)
 
+        self.mainloop()
+
 
 if __name__ == '__main__':
     app = AppDesenho()
-    app.mainloop()
+
