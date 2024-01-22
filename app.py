@@ -15,9 +15,14 @@ class AppDesenho(ctk.CTk):
         self.altura = round(self.winfo_screenheight() * 0.75)
 
         self.geometry(f'{self.largura}x{self.altura}')
+        self.minsize(800, 600)
 
         self.resizable(False, False)
-        self.pack_propagate(False)
+
+        #layout
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1, uniform='a')
+        self.columnconfigure(1, weight=5, uniform='a')
 
         self.iconbitmap(Path(__file__).parent / "paint-pallete.ico")
 
@@ -26,7 +31,7 @@ class AppDesenho(ctk.CTk):
         self.espessuraLabel = ctk.StringVar()
         self.figura = ctk.StringVar(value='')
 
-        # Componentes
+        #Componentes
         self.canvas = AreaDeDesenho(self, self.espessura, self.figura)
         self.drawtools = DrawTools(self, self.figura, self.canvas, self.espessura)
 

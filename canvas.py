@@ -12,7 +12,7 @@ class AreaDeDesenho(Canvas):
                          bg='white',
                          highlightthickness=0)
 
-        self.pack(side='right', fill='both', expand=True)
+        self.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
         self.configure(cursor='tcross')
 
         self.update()
@@ -42,11 +42,10 @@ class AreaDeDesenho(Canvas):
         self.subMenu.add_separator()
         self.subMenu.add_command(label="Sair", command=container.quit)
 
-        self.coordenadas = ctk.CTkLabel(self,
-                                        text_color='black',
-                                        textvariable=self.coordenadas_var,
-                                        font=ctk.CTkFont(family='Consolas', size=14)
-                                        ).place(x=self.largura * 0.8, y=self.altura*0.95)
+        #coordenadas
+        ctk.CTkLabel(self, text_color='black', textvariable=self.coordenadas_var,
+                     font=ctk.CTkFont(family='Consolas', size=14)
+                     ).pack(side='bottom', anchor='se', padx=10)
 
         # start_point
         self.ponto_mouse_anterior = Ponto(x=None, y=None)
@@ -55,7 +54,6 @@ class AreaDeDesenho(Canvas):
         self.bind("<Button-1>", self.desenhaPrimitivo)
         self.bind("<Button-3>", self.callSubMenu)
         self.bind("<Motion>", self.changeCoordinates)
-
 
     def changeCoordinates(self, event):
         self.coordenadas_var.set(value=f'{event.x}, {event.y}px')
@@ -78,7 +76,6 @@ class AreaDeDesenho(Canvas):
             self.menuEscala.protocol("WM_DELETE_WINDOW", self.menuEscala.close_window)
         else:
             self.menuEscala.focus()
-
 
     def desfaz(self, event):
         if not self.lista_primitivos.is_empty():
@@ -190,6 +187,9 @@ class AreaDeDesenho(Canvas):
                     primitivo.desenhaMandala(self)
 
     def limpaTudo(self):
+        for i in range(len(self.lista_primitivos)):
+            self.lista_primitivos[i].exibe_tag(self, False)
+
         self.lista_primitivos.clear()
         self.deletaTudo()
 
