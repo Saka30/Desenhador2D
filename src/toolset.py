@@ -65,7 +65,7 @@ class FrameA(ctk.CTkFrame):
         ctk.CTkButton(self, text='Salvar Desenho', command=self.salvarArquivo).pack(pady=10)
 
     def abrirArquivo(self):
-        path = filedialog.askopenfilename(initialdir=Path(__file__).parents[1] / 'Desenhos',
+        path = filedialog.askopenfilename(initialdir=Path(__file__).parents[1] / 'desenhos',
                                           title='Selecionar arquivo',
                                           filetypes=(("json files", '*.json'),))
         if path:
