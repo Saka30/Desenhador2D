@@ -19,19 +19,19 @@ class AppDesenho(ctk.CTk):
 
         self.resizable(False, False)
 
-        #layout
+        # layout
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1, uniform='a')
         self.columnconfigure(1, weight=5, uniform='a')
 
-        self.iconbitmap(Path(__file__).parent / "paint-pallete.ico")
+        self.iconbitmap(Path(__file__).parents[1] / "paint-pallete.ico")
 
         # dados
         self.espessura = ctk.IntVar(value=1)
         self.espessuraLabel = ctk.StringVar()
         self.figura = ctk.StringVar(value='')
 
-        #Componentes
+        # Componentes
         self.canvas = AreaDeDesenho(self, self.espessura, self.figura)
         self.drawtools = DrawTools(self, self.figura, self.canvas, self.espessura)
 
@@ -43,4 +43,3 @@ class AppDesenho(ctk.CTk):
 
 if __name__ == '__main__':
     app = AppDesenho()
-

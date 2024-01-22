@@ -1,9 +1,10 @@
 import re
+from pathlib import Path
 import customtkinter as ctk
 from json_utils import JsonHandler
 from primitivos import Ponto
 from primitivos.graficos import TrianguloGr
-from tkinter import Listbox, END, Canvas, Menu, filedialog
+from tkinter import Listbox, END, Canvas, filedialog
 
 
 class DrawTools(ctk.CTkTabview):
@@ -64,7 +65,7 @@ class FrameA(ctk.CTkFrame):
         ctk.CTkButton(self, text='Salvar Desenho', command=self.salvarArquivo).pack(pady=10)
 
     def abrirArquivo(self):
-        path = filedialog.askopenfilename(initialdir='Downloads',
+        path = filedialog.askopenfilename(initialdir=Path(__file__).parents[1] / 'Desenhos',
                                           title='Selecionar arquivo',
                                           filetypes=(("json files", '*.json'),))
         if path:
