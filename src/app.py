@@ -28,7 +28,7 @@ class AppDesenho(ctk.CTk):
 
         # dados
         self.espessura = ctk.IntVar(value=1)
-        self.espessuraLabel = ctk.StringVar()
+        self.espessuraLabel = ctk.StringVar(value='')
         self.figura = ctk.StringVar(value='')
 
         # Componentes

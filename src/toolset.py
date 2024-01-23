@@ -250,7 +250,7 @@ class MenuDeleta(MenuDePrimitivos):
         for i in range(len(self.listaPrimitivos)):
             self.listaFiguras.insert(END, self.listaPrimitivos[i].id)
 
-        ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom')
+        ctk.CTkButton(self, text='Excluir', command=self.destroyPrimitivos, width=80).pack(side='bottom', pady=10)
 
     def destroyPrimitivos(self):
 

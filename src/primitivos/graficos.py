@@ -4,11 +4,11 @@ from math import sin, cos, radians
 
 
 def normaliza(coordenada: dict | Ponto, canvas) -> dict:
-
     x = coordenada['x'] / canvas.largura
     y = coordenada['y'] / canvas.altura
 
     return {"x": x, "y": y}
+
 
 def converte(cor_rgb: str) -> dict:
     dict_rgb = {}
@@ -57,10 +57,6 @@ class PontoGr(Ponto):
     def __del__(self):
         PontoGr._id -= 1
 
-    def apagar(self, canvas):
-        self.cor = '#FFFFFF'
-        self.desenhaPonto(canvas)
-
     def exibe_tag(self, meu_canvas, flag):
         if flag:
             if self.tag is None:
@@ -72,7 +68,7 @@ class PontoGr(Ponto):
                 self.tag.place_forget()
 
     def info(self, canvas) -> dict:
-        return {'id': self.id, 'esp': round(self.width/30 * 100),
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
                 **normaliza({"x": self.x, "y": self.y}, canvas),
                 'cor': converte(self.cor)}
 
@@ -110,10 +106,6 @@ class RetaGr(Reta):
             ponto_inicial.y += incremento_y
             ponto_inicial.desenhaPonto(canvas)
 
-    def apagar(self, canvas):
-        self.p1.cor = '#FFFFFF'
-        self.desenhaReta(canvas)
-
     def __del__(self):
         RetaGr._id -= 1
 
@@ -127,10 +119,10 @@ class RetaGr(Reta):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,canvas) -> dict:
-        return {'id':self.id, 'esp':round(self.width/30 * 100),
-                'p1':normaliza(self.p1,canvas),
-                'p2':normaliza(self.p2,canvas),
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
+                'p1': normaliza(self.p1, canvas),
+                'p2': normaliza(self.p2, canvas),
                 'cor': converte(self.cor)}
 
 
@@ -154,11 +146,6 @@ class RetanguloGr(Retangulo):
         RetaGr(PontoGr(self.p2.x, self.p1.y, self.cor, self.width),
                PontoGr(self.p1.x, self.p1.y, self.cor, self.width), self.cor, self.width).desenhaReta(canvas)
 
-    def apagar(self, canvas):
-        self.p1.cor = '#FFFFFF'
-        self.p2.cor = '#FFFFFF'
-        self.desenhaRetangulo(canvas)
-
     def __del__(self):
         RetanguloGr._id -= 1
 
@@ -172,10 +159,10 @@ class RetanguloGr(Retangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,canvas) -> dict:
-        return {'id':self.id, 'esp':round(self.width/30 * 100),
-                'p1':normaliza(self.p1,canvas),
-                'p2':normaliza(self.p2,canvas),
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
+                'p1': normaliza(self.p1, canvas),
+                'p2': normaliza(self.p2, canvas),
                 'cor': converte(self.cor)}
 
 
@@ -193,17 +180,8 @@ class TrianguloGr(Triangulo):
         self.tag = None
 
     def desenhaTriangulo(self, canvas):
-        # RetaGr(self.pontos[0], self.pontos[1], self.cor, self.width).desenhaReta(canvas)
-        # RetaGr(self.pontos[1], self.pontos[2], self.cor, self.width).desenhaReta(canvas)
-        # RetaGr(self.pontos[2], self.pontos[0], self.cor, self.width).desenhaReta(canvas)
-
         for i, j in zip((0, 1, 2), (1, 2, 0)):
             RetaGr(self.pontos[i], self.pontos[j], self.cor, self.width).desenhaReta(canvas)
-
-    def apagar(self, canvas):
-        for p in self.pontos:
-            p.cor = '#FFFFFF'
-        self.desenhaTriangulo(canvas)
 
     def __del__(self):
         TrianguloGr._id -= 1
@@ -218,11 +196,11 @@ class TrianguloGr(Triangulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,canvas) -> dict:
-        return {'id':self.id, 'esp':round(self.width/30 * 100),
-                'p1':normaliza(self.pontos[0],canvas),
-                'p2':normaliza(self.pontos[1],canvas),
-                'p3':normaliza(self.pontos[2],canvas),
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
+                'p1': normaliza(self.pontos[0], canvas),
+                'p2': normaliza(self.pontos[1], canvas),
+                'p3': normaliza(self.pontos[2], canvas),
                 'cor': converte(self.cor)}
 
     def rotaciona(self, angulo, ponto):
@@ -246,7 +224,7 @@ class TrianguloGr(Triangulo):
             novo_y = sy * y + ponto.y * (1 - sy)
             novo_x, novo_y = round(novo_x), round(novo_y)
             self.pontos[i] = Ponto(novo_x, novo_y)
-        
+
 
 class CirculoGr(Circulo):
     _id = 0
@@ -269,10 +247,6 @@ class CirculoGr(Circulo):
             PontoGr(x, y, self.cor, self.width).desenhaPonto(canvas)
             angulo += 0.1
 
-    def apagar(self, canvas):
-        self.cor = '#FFFFFF'
-        self.desenhaCircunferencia(canvas)
-
     def __del__(self):
         CirculoGr._id -= 1
 
@@ -286,10 +260,10 @@ class CirculoGr(Circulo):
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,canvas) -> dict:
-        return {'id':self.id, 'esp':round(self.width/30 * 100),
-                'centro':normaliza(self.centro,canvas),
-                'raio':self.raio / canvas.largura,
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
+                'centro': normaliza(self.centro, canvas),
+                'raio': self.raio / canvas.largura,
                 'cor': converte(self.cor)}
 
 
@@ -312,7 +286,7 @@ class Mandala:
 
     def desenhaMandala(self, canvas):
         # CIRCULOS
-        
+
         # central
         c1 = CirculoGr(self.centro, self.raio, self.corCirc, self.width)
         c1.desenhaCircunferencia(canvas)
@@ -432,12 +406,6 @@ class Mandala:
                              self.corRetas, self.width)],
                     self.corRetas, self.width).desenhaTriangulo(canvas)
 
-    def apagar(self, canvas):
-        self.corRetas = '#FFFFFF'
-        self.corCirc = '#FFFFFF'
-
-        self.desenhaMandala(canvas)
-
     def __del__(self):
         Mandala._id -= 1
 
@@ -451,10 +419,9 @@ class Mandala:
             if self.tag:
                 self.tag.place_forget()
 
-    def info(self,canvas) -> dict:
-        return {'id':self.id, 'esp':round(self.width/30 * 100),
-                'p1':normaliza(self.centro,canvas),
-                'p2':normaliza(self.p2,canvas),
+    def info(self, canvas) -> dict:
+        return {'id': self.id, 'esp': round(self.width / 30 * 100),
+                'p1': normaliza(self.centro, canvas),
+                'p2': normaliza(self.p2, canvas),
                 'cor1': converte(self.corCirc),
-                'cor2':converte(self.corRetas)}
-
+                'cor2': converte(self.corRetas)}

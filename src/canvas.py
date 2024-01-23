@@ -25,7 +25,7 @@ class AreaDeDesenho(Canvas):
         self.mandala_cor2 = '#DD3B35'
         self.espessura = espessura
         self.tipo_primitivo = tipo_primitivo
-        self.coordenadas_var = ctk.StringVar(value='')
+        self.coordenadas_var = ctk.StringVar(value='0, 0px')
         self.check_var = ctk.StringVar(value="off")
         self.container = container
         self.menuRotaciona = None
@@ -186,7 +186,7 @@ class AreaDeDesenho(Canvas):
                 case Mandala():
                     primitivo.desenhaMandala(self)
 
-    def limpaTudo(self):
+    def limpaTudo(self, event=None):
         for i in range(len(self.lista_primitivos)):
             self.lista_primitivos[i].exibe_tag(self, False)
 
