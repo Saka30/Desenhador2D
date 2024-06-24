@@ -14,7 +14,7 @@ class AreaDeDesenho(Canvas):
 
         self.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
         self.configure(cursor='tcross')
-
+       
         self.update()
         self.largura, self.altura = self.winfo_width(), self.winfo_height()
 
@@ -105,21 +105,21 @@ class AreaDeDesenho(Canvas):
             case 'mandala':
                 primitivo = self.desenhaMandala(ponto_do_mouse_atual)
 
-        if primitivo is not None:
+        if primitivo:
             self.lista_primitivos.append(primitivo)
             if self.check_var.get() == "on":
                 primitivo.exibe_tag(self, True)
 
     def desenhaPonto(self, ponto):
         p = PontoGr(ponto.x, ponto.y, self.cor, self.espessura.get())
-        p.desenhaPonto(self)
+        p.desenha(self)
 
         return p
 
     def desenhaReta(self, ponto1, ponto2):
         if ponto1 != Ponto(None, None):
             reta = RetaGr(ponto1, ponto2, self.cor, self.espessura.get())
-            reta.desenhaReta(self)
+            reta.desenha(self)
             self.ponto_mouse_anterior = Ponto(x=None, y=None)
 
             return reta
@@ -130,8 +130,7 @@ class AreaDeDesenho(Canvas):
 
         if ponto1 != Ponto(None, None):
             retang = RetanguloGr(ponto1, ponto2, self.cor, self.espessura.get())
-            retang.desenhaRetangulo(self)
-
+            retang.desenha(self)
             self.ponto_mouse_anterior = Ponto(x=None, y=None)
 
             return retang
@@ -140,7 +139,7 @@ class AreaDeDesenho(Canvas):
 
     def desenhaTriangulo(self, pontos):
         triang = TrianguloGr(pontos, self.cor, self.espessura.get())
-        triang.desenhaTriangulo(self)
+        triang.desenha(self)
 
         return triang
 
@@ -148,7 +147,7 @@ class AreaDeDesenho(Canvas):
         if self.ponto_mouse_anterior != Ponto(None, None):
             raio = ponto - self.ponto_mouse_anterior
             circ = CirculoGr(self.ponto_mouse_anterior, raio, self.cor, self.espessura.get())
-            circ.desenhaCircunferencia(self)
+            circ.desenha(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
             return circ
@@ -159,7 +158,7 @@ class AreaDeDesenho(Canvas):
         if self.ponto_mouse_anterior != Ponto(None, None):
             mand = Mandala(self.ponto_mouse_anterior, ponto, self.mandala_cor1,
                            self.mandala_cor2, self.espessura.get())
-            mand.desenhaMandala(self)
+            mand.desenha(self)
 
             self.ponto_mouse_anterior = Ponto(None, None)
             return mand
@@ -172,19 +171,7 @@ class AreaDeDesenho(Canvas):
     def redesenhar(self):
         for i in range(len(self.lista_primitivos)):
             primitivo = self.lista_primitivos[i]
-            match primitivo:
-                case PontoGr():
-                    primitivo.desenhaPonto(self)
-                case RetaGr():
-                    primitivo.desenhaReta(self)
-                case TrianguloGr():
-                    primitivo.desenhaTriangulo(self)
-                case RetanguloGr():
-                    primitivo.desenhaRetangulo(self)
-                case CirculoGr():
-                    primitivo.desenhaCircunferencia(self)
-                case Mandala():
-                    primitivo.desenhaMandala(self)
+            primitivo.desenha(self)
 
     def limpaTudo(self, event=None):
         for i in range(len(self.lista_primitivos)):

@@ -23,7 +23,7 @@ class JsonHandler:
         p = None
         array_primitivos = LinkedList()
 
-        for lista_primitivos in meu_desenho.keys():
+        for lista_primitivos in meu_desenho:
             for primitivo in meu_desenho[lista_primitivos]:
                 match lista_primitivos:
                     case 'ponto':
@@ -55,7 +55,7 @@ class JsonHandler:
                         p = Mandala(p1=centro, p2=p2, corCirc=converte(primitivo['cor1']),
                                     corRetas=converte(primitivo['cor2']), width=round(primitivo['esp'] / 100 * 30))
 
-                if p is not None:
+                if p:
                     array_primitivos.append(p)
 
         return array_primitivos

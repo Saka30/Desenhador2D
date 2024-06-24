@@ -102,7 +102,7 @@ class LinkedList:
             return removed_data
 
         current = self.head
-        while current.next.next is not None:
+        while current.next.next :
             current = current.next
 
         removed_data = current.next.data

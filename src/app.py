@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from canvas import AreaDeDesenho
 from toolset import DrawTools
+from sys import platform
 from pathlib import Path
 
 
@@ -24,7 +25,9 @@ class AppDesenho(ctk.CTk):
         self.columnconfigure(0, weight=1, uniform='a')
         self.columnconfigure(1, weight=5, uniform='a')
 
-        self.iconbitmap(Path(__file__).parents[1] / "paint-pallete.ico")
+        #define um icone para gui
+        if platform == 'win32':
+            self.iconbitmap(Path(__file__).parents[1] / "paint-pallete.ico")
 
         # dados
         self.espessura = ctk.IntVar(value=1)
