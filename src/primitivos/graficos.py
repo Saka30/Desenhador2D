@@ -322,7 +322,7 @@ class Mandala:
                             self.corRetas, self.width),
                     PontoGr(c1.centro.x + 3 * (c1.raio / 2), c1.centro.y - altura_triang,
                             self.corRetas, self.width),
-                    self.corRetas, self.width).desenhangulo(canvas)
+                    self.corRetas, self.width).desenha(canvas)
 
         # RETAS
 
