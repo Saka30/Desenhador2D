@@ -101,7 +101,7 @@ class AreaDeDesenho(Canvas):
                     primitivo = self.desenhaTriangulo(pontosTriangulo)
                     self.pontosTriangulo.clear()
             case 'circulo':
-                primitivo = self.desenhaCincunferencia(ponto_do_mouse_atual)
+                primitivo = self.desenhaCincunferencia(self.ponto_mouse_anterior, ponto_do_mouse_atual)
             case 'mandala':
                 primitivo = self.desenhaMandala(ponto_do_mouse_atual)
 
@@ -115,27 +115,32 @@ class AreaDeDesenho(Canvas):
         p.desenha(self)
 
         return p
+    
+    def desenhaForma(self, ponto1, ponto2, classe):
+        if ponto1 != Ponto(None, None):
+
+            if classe is CirculoGr:
+                raio = ponto2 - ponto1
+                ponto2 = raio
+
+            forma = classe(ponto1, ponto2, self.cor, self.espessura.get())
+            self.ponto_mouse_anterior = Ponto(x=None, y=None)
+
+            return forma
+        else:
+            self.ponto_mouse_anterior = ponto2
 
     def desenhaReta(self, ponto1, ponto2):
-        if ponto1 != Ponto(None, None):
-            reta = RetaGr(ponto1, ponto2, self.cor, self.espessura.get())
+        reta = self.desenhaForma(ponto1, ponto2, RetaGr)
+        if reta:
             reta.desenha(self)
-            self.ponto_mouse_anterior = Ponto(x=None, y=None)
-
             return reta
-        else:
-            self.ponto_mouse_anterior = ponto2
-
+    
     def desenhaRetangulo(self, ponto1, ponto2):
-
-        if ponto1 != Ponto(None, None):
-            retang = RetanguloGr(ponto1, ponto2, self.cor, self.espessura.get())
+        retang = self.desenhaForma(ponto1, ponto2, RetanguloGr)
+        if retang:
             retang.desenha(self)
-            self.ponto_mouse_anterior = Ponto(x=None, y=None)
-
             return retang
-        else:
-            self.ponto_mouse_anterior = ponto2
 
     def desenhaTriangulo(self, pontos):
         triang = TrianguloGr(pontos, self.cor, self.espessura.get())
@@ -143,16 +148,11 @@ class AreaDeDesenho(Canvas):
 
         return triang
 
-    def desenhaCincunferencia(self, ponto):
-        if self.ponto_mouse_anterior != Ponto(None, None):
-            raio = ponto - self.ponto_mouse_anterior
-            circ = CirculoGr(self.ponto_mouse_anterior, raio, self.cor, self.espessura.get())
+    def desenhaCincunferencia(self, ponto1, ponto2):
+        circ = self.desenhaForma(ponto1, ponto2, CirculoGr)
+        if circ:
             circ.desenha(self)
-
-            self.ponto_mouse_anterior = Ponto(None, None)
             return circ
-        else:
-            self.ponto_mouse_anterior = ponto
 
     def desenhaMandala(self, ponto):
         if self.ponto_mouse_anterior != Ponto(None, None):
